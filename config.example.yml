@@ -1,0 +1,21 @@
+appname: open.fredliang.cn
+
+server:
+  host: 127.0.0.1
+  port: 9012
+  secretkey: 2333333
+
+mongo:
+  host:     mongo.com
+  port:     27017
+  db:       db
+  username: username
+  password: password
+
+dayu:
+  accessid: 123546576897865432
+  accesskey: 124354645342345463
+
+
+
+

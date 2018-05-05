@@ -1,0 +1,32 @@
+package main
+
+import (
+	"family-tree/graphql"
+	"family-tree/middleware"
+	"family-tree/utils"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
+
+func main() {
+	r := gin.Default()
+	r.POST("/login", middleware.AuthMiddleware.LoginHandler)
+
+	auth := r.Group("/auth")
+	auth.Use(middleware.AuthMiddleware.MiddlewareFunc())
+	{
+		auth.POST("/graphql", graphql.Handler())
+		auth.GET("/grefresh_token", middleware.AuthMiddleware.RefreshHandler)
+	}
+	showStatus()
+	r.Run(utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port)
+
+}
+
+func showStatus() {
+	fmt.Println("\n===================================" +
+		"\nAPP         : " + utils.AppConfig.APPName +
+		"\nRunning On  : HTTP      " + utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port +
+		"\n===================================")
+}
