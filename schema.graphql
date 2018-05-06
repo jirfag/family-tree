@@ -22,13 +22,22 @@ type User {
 	wechat: String!
 	loaction: String!
 	inviteCode: String!
-	createdTime: String!
+	createdTime: String! # 2018-05-06 18:49:48.032 +0800 CST
 	isGraduate: Boolean!
 	isActivated: Boolean!
 	isBasicCompleted: Boolean!
 	isAdmin: Boolean!
 	activities: [activity]
-	mentors: [user]
-	mentees: [user]
+	mentors: [User]
+	mentees: [User]
 	groups: [group]
+}
+
+type Group {
+	groupID: String!
+	groupName: String!
+	startYear: Int!
+	endYear: Int! # 0 stands for up to now
+	created_time: String! # 2018-05-06 18:49:48.032 +0800 CST
+	users: [User]
 }

@@ -6,6 +6,7 @@ import (
 	t "family-tree/graphql/types"
 	"family-tree/middleware"
 	"family-tree/utils"
+	"fmt"
 	"log"
 
 	"github.com/graphql-go/graphql"
@@ -40,7 +41,7 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 		log.Println("GetUser: ", err)
 		return nil, nil
 	}
-
+	fmt.Printf("%v", res)
 	return res, nil
 }
 

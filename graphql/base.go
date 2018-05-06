@@ -27,10 +27,6 @@ func Handler() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST")
 
-		h.ServeHTTP(c.Writer, c.Request.WithContext(context.WithValue(
-			ctx,
-			"User",
-			userID,
-		)))
+		h.ServeHTTP(c.Writer, c.Request.WithContext(context.WithValue(ctx, "User", userID)))
 	}
 }

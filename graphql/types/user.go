@@ -1,8 +1,11 @@
 package types
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"time"
 
-// User is User type
+	"gopkg.in/mgo.v2/bson"
+)
+
 type User struct {
 	ID               bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Password         string        `bson:"password" json:"password"`
@@ -14,7 +17,7 @@ type User struct {
 	Wechat           string        `bson:"wechat" json:"wechat"`
 	Loaction         string        `bson:"location" json:"location"`
 	InviteCode       string        `bson:"inviteCode" json:"inviteCode"`
-	CreatedTime      string        `bson:"createdTime" json:"createdTime"`
+	CreatedTime      time.Time     `bson:"createdTime" json:"createdTime"`
 	IsGraduated      bool          `bson:"isGraduated" json:"isGraduated"`
 	IsActivated      bool          `bson:"isActivated" json:"isActivated"`
 	IsBasicCompleted bool          `bson:"isBasicCompleted" json:"isBasicCompleted"`
@@ -24,8 +27,7 @@ type User struct {
 	GroupsID         []int         `bson:"groupsID" json:"groupsID"`
 }
 
-// Activity locate user actions
-type Activity struct {
+type Activities struct {
 	Action   string `bson:"password" json:"password"`
 	Username string `bson:"username" json:"username"`
 }

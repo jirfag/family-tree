@@ -1,7 +1,9 @@
 FROM alpine
-MAINTAINER fredliang
+LABEL maintainer="fredliang"
+RUN apk --no-cache add tzdata  ca-certificates && \
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone
 
-RUN apk add --no-cache ca-certificates
 WORKDIR /app
 ENV GIN_MODE release
 ADD config.deploy.yml /app/config.deploy.yml
