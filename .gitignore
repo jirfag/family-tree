@@ -1,4 +1,5 @@
 .idea/
 tmp
+family-tree
 config.yml
 config.deploy.yml

@@ -6,6 +6,7 @@ import (
 	"family-tree/middleware"
 	"family-tree/utils"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,9 @@ func main() {
 		auth.POST("/graphql", graphql.Handler())
 		auth.GET("/refresh_token", middleware.AuthMiddleware.RefreshHandler)
 	}
-
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "pong", "code": 200})
+	})
 	showStatus()
 	r.Run(utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port)
 

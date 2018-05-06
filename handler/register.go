@@ -54,17 +54,17 @@ func VerifyCodeHandler(c *gin.Context) {
 		return
 	}
 	if info.IsActivated == true {
-		c.JSON(http.StatusOK, gin.H{"result": "Already Verifyed"})
+		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Already Verifyed"})
 		return
 	}
 
 	if info.InviteCode == data.InviteCode {
 		info.IsActivated = true
 		db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": data.Username}, &info)
-		c.JSON(http.StatusOK, gin.H{"result": "Verifyed"})
+		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Verifyed"})
 		return
 	} else {
-		c.JSON(http.StatusForbidden, gin.H{"result": "Wrong Verify Code"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "Wrong Verify Code"})
 		return
 	}
 
