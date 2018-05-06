@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	ai "github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2/bson"
 	validator "gopkg.in/validator.v2"
 )
@@ -49,13 +51,16 @@ func RegisterHandler(c *gin.Context) {
 	}
 
 	// send sms
-	isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.InviteCode+`"}`)
-	if !isOK {
-		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
-		return
+	if os.Getenv("GIN_MODE") == "release" {
+		isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.InviteCode+`"}`)
+		if !isOK {
+			c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
+			return
+		}
 	}
 
 	// save user info
+	info.ID = ai.Next("user")
 	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -72,10 +77,18 @@ func VerifyCodeHandler(c *gin.Context) {
 	c.BindJSON(&data)
 
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": data.Username}).One(&info)
+	fmt.Println("info.Username:", info.Username)
+
+	if info.Username == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "No such user"})
+		return
+	}
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
+
 	if info.IsActivated == true {
 		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Already Verifyed"})
 		return
@@ -94,6 +107,7 @@ func VerifyCodeHandler(c *gin.Context) {
 }
 
 type register struct {
+	ID          uint64    `json:"id" bson:"_id,omitempty"`
 	Username    string    `validate:"min=3,max=20" bson:"username" json:"username"`
 	Password    string    `validate:"min=3,max=30,regexp=^((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[a-z]).*$" bson:"password" json:"password"`
 	Phone       string    `validate:"len=11,regexp=^1[34578]\d{9}$" bson:"phone" json:"phone"`

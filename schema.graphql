@@ -12,7 +12,7 @@ type Mutation {
 }
 
 type User {
-	id: ID!
+	id: Int!
 	password: String! # min=3, max=30, one lower case, one digit number
 	username: String! # min=3,max=20
 	realname: String!
@@ -34,16 +34,16 @@ type User {
 }
 
 type Group {
-	groupID: String!
+	id: Int!
 	groupName: String!
 	startYear: Int!
 	endYear: Int! # 0 stands for up to now
-	created_time: String! # 2018-05-06 18:49:48.032 +0800 CST
+	createdTime: String! # 2018-05-06 18:49:48.032 +0800 CST
 	users: [User]
 }
 
 type Project {
-	id: ID!
+	id: Int!
 	title: String!
 	description: String!
 	year: Int!
@@ -51,4 +51,5 @@ type Project {
 	adminID: ID!
 	logo: String!
 	image: [String!]
+	members: [User]
 }

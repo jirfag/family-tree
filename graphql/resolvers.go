@@ -6,7 +6,6 @@ import (
 	t "family-tree/graphql/types"
 	"family-tree/middleware"
 	"family-tree/utils"
-	"fmt"
 	"log"
 
 	"github.com/graphql-go/graphql"
@@ -18,7 +17,7 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 	var res []t.User
 	var p = bson.M{}
 
-	id, isOK := params.Args["id"].(bson.ObjectId)
+	id, isOK := params.Args["id"].(uint64)
 	if isOK {
 		p["id"] = id
 	}
@@ -41,7 +40,38 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 		log.Println("GetUser: ", err)
 		return nil, nil
 	}
-	fmt.Printf("%v", res)
+	return res, nil
+}
+
+// GetUser is a graphql resolver to get user info
+func GetGroup(params graphql.ResolveParams) (interface{}, error) {
+	var res []t.Group
+	var p = bson.M{}
+
+	id, isOK := params.Args["id"].(uint64)
+	if isOK {
+		p["id"] = id
+	}
+
+	groupName, isOK := params.Args["groupName"].(string)
+	if isOK {
+		p["groupNamesername"] = groupName
+	}
+	startYear, isOK := params.Args["startYear"].(int)
+	if isOK {
+		p["startYear"] = startYear
+	}
+	endYear, isOK := params.Args["endYear"].(int)
+	if isOK {
+		p["endYear"] = endYear
+	}
+
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).All(&res)
+
+	if err != nil {
+		log.Println("Get Group: ", err)
+		return nil, nil
+	}
 	return res, nil
 }
 
@@ -53,12 +83,18 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 
 	// load params
 	username, isOK := params.Args["username"].(string)
-	if isOK {
+	if isOK && username != "" {
 		p["username"] = username
 	}
 
+	// load params
+	id, isOK := params.Args["username"].(uint64)
+	if isOK && id != 0 {
+		p["id"] = id
+	}
+
 	// check user exist
-	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": username}).One(&p)
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&p)
 	if err != nil {
 		log.Println("Update User: ", err)
 	}

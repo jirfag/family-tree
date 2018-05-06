@@ -2,6 +2,8 @@ package db
 
 import (
 	"family-tree/utils"
+
+	ai "github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2"
 )
 
@@ -17,6 +19,10 @@ func initDB() *mgo.Session {
 	}
 
 	session, err := mgo.DialWithInfo(info)
+	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("user"))
+	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("project"))
+	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("group"))
+
 	if err != nil {
 		panic(err)
 	}

@@ -10,10 +10,35 @@ var queryUser = graphql.Field{
 	Type:        graphql.NewList(userType),
 
 	Args: graphql.FieldConfigArgument{
-		"id":       &graphql.ArgumentConfig{Type: graphql.String},
+		"id":       &graphql.ArgumentConfig{Type: graphql.Int},
 		"username": &graphql.ArgumentConfig{Type: graphql.String},
 		"phone":    &graphql.ArgumentConfig{Type: graphql.String},
 		"email":    &graphql.ArgumentConfig{Type: graphql.String},
+	},
+	Resolve: GetUser,
+}
+
+var queryGroup = graphql.Field{
+	Name:        "Group",
+	Description: "Query Group",
+	Type:        graphql.NewList(groupType),
+
+	Args: graphql.FieldConfigArgument{
+		"id":        &graphql.ArgumentConfig{Type: graphql.String},
+		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
+		"startYear": &graphql.ArgumentConfig{Type: graphql.String},
+		"endYear":   &graphql.ArgumentConfig{Type: graphql.String},
+	},
+	Resolve: GetGroup,
+}
+
+var queryProject = graphql.Field{
+	Name:        "Project",
+	Description: "Query Project",
+	Type:        graphql.NewList(userType),
+
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{Type: graphql.String},
 	},
 	Resolve: GetUser,
 }
@@ -23,6 +48,8 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name:        "RootQuery",
 	Description: "Root Query",
 	Fields: graphql.Fields{
-		"user": &queryUser,
+		"user":    &queryUser,
+		"group":   &queryGroup,
+		"project": &queryProject,
 	},
 })
