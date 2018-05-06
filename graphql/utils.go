@@ -1,11 +1,7 @@
-package resolvers
+package graphql
 
 import (
-	"family-tree/db"
-	t "family-tree/graphql/types"
-	"family-tree/utils"
 	"github.com/graphql-go/graphql"
-	"gopkg.in/mgo.v2/bson"
 )
 
 func loadParams(params graphql.ResolveParams, key string) interface{} {

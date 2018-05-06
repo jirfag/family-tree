@@ -1,2 +1,4 @@
 .idea/
+tmp
 config.yml
+config.deploy.yml

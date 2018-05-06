@@ -23,11 +23,11 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 
 		err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
 		if err != nil {
-			log.Fatal("GetUser: ", err)
+			log.Println("GetUser: ", err)
 			return "error", false
 		}
 
-		isOK := CheckPasswordHash(res.Password, password)
+		isOK := CheckPasswordHash(password, res.Password)
 		if isOK {
 			return res.Username, true
 		}
@@ -40,11 +40,10 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 
 		err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
 		if err != nil {
-			log.Fatal("GetUser: ", err)
+			log.Println("GetUser: ", err)
 			return false
 		}
-
-		return res.IsAdmin
+		return true
 	},
 	Unauthorized: func(c *gin.Context, code int, message string) {
 		c.JSON(code, gin.H{

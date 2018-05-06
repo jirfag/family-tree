@@ -22,14 +22,21 @@ type Config struct {
 		Host      string `default:"127.0.0.1"`
 		Port      string `default:"27017"`
 		SecretKey string `default:"SecretKey"`
-		DB        string `default:"hackday"`
-		Username  string `default:"Username"`
-		Password  string `default:"Password"`
+		DB        string `default:"db"`
+		Username  string `default:"username"`
+		Password  string `default:"password"`
 	}
 
 	Dayu struct {
 		AccessID  string `required:"true"`
 		AccessKey string `required:"true"`
+	}
+
+	Redis struct {
+		Host     string `default:"127.0.0.1"`
+		Port     string `default:"6379"`
+		Password string `default:""`
+		DB       string `default:"db"`
 	}
 }
 

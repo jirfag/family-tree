@@ -1,4 +1,4 @@
-package resolvers
+package graphql
 
 import (
 	"family-tree/db"
@@ -35,7 +35,8 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).All(&res)
 
 	if err != nil {
-		log.Fatal("GetUser: ", err)
+		log.Println("GetUser: ", err)
+		return nil, nil
 	}
 
 	return res, nil
@@ -103,13 +104,13 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 	// check user exist
 	count, err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": username}).Count()
 	if count == 0 || err != nil {
-		log.Fatal("UpdateUser: ", err)
+		log.Fatal("Update User: ", err)
 	}
 
 	// update user
 	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": username}, p)
 	if err != nil {
-		log.Fatal("UpdateUser: ", err)
+		log.Fatal("Update User: ", err)
 	}
 
 	// return data
