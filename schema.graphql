@@ -13,8 +13,8 @@ type Mutation {
 
 type User {
 	id: ID!
-	password: String! # min=3, max=40, one lower case, one digit number
-	username: String!
+	password: String! # min=3, max=30, one lower case, one digit number
+	username: String! # min=3,max=20
 	realname: String!
 	email: String!
 	phone: String!
@@ -27,10 +27,10 @@ type User {
 	isActivated: Boolean!
 	isBasicCompleted: Boolean!
 	isAdmin: Boolean!
-	activities: [activity]
+	projects: [Project]
 	mentors: [User]
 	mentees: [User]
-	groups: [group]
+	groups: [Group]
 }
 
 type Group {
@@ -40,4 +40,15 @@ type Group {
 	endYear: Int! # 0 stands for up to now
 	created_time: String! # 2018-05-06 18:49:48.032 +0800 CST
 	users: [User]
+}
+
+type Project {
+	id: ID!
+	title: String!
+	description: String!
+	year: Int!
+	createdTime: String!
+	adminID: ID!
+	logo: String!
+	image: [String!]
 }
