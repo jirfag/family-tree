@@ -6,7 +6,7 @@ import (
 	"github.com/tobyzxj/uuid"
 )
 
-func SendSMS(Phone, Template, Dict string) (isOK bool, msg string, respondmsg string) {
+func SendSMS(Phone, Template, Dict string) (isOK bool, msg string, errID string) {
 	dysms.HTTPDebugEnable = true
 	dysms.SetACLClient(AppConfig.Dayu.AccessID, AppConfig.Dayu.AccessKey) // dysms.New(ACCESSID, ACCESSKEY)
 

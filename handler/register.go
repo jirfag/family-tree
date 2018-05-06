@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
+	validator "gopkg.in/validator.v2"
 )
 
 // RegisterHandler is a func to handler register request
@@ -29,15 +30,32 @@ func RegisterHandler(c *gin.Context) {
 		}
 	}
 
-	rand.Seed(time.Now().Unix())
+	// log CreatedTime
 	info.CreatedTime = time.Now()
+
+	// gen InviteCode
+	rand.Seed(time.Now().Unix())
 	info.InviteCode = fmt.Sprintf("%04d", rand.Intn(10000))
+
+	// handle password
+	if err := validator.Validate(info); err != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{"message": err})
+		return
+	}
 	info.Password, err = middleware.HashPassword(info.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.InviteCode+`"}`)
+
+	// send sms
+	isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.InviteCode+`"}`)
+	if !isOK {
+		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
+		return
+	}
+
+	// save user info
 	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -76,9 +94,9 @@ func VerifyCodeHandler(c *gin.Context) {
 }
 
 type register struct {
-	Username    string    `bson:"username" json:"username"`
-	Password    string    `bson:"password" json:"password"`
-	Phone       string    `bson:"phone" json:"phone"`
+	Username    string    `validate:"min=3,max=20" bson:"username" json:"username"`
+	Password    string    `validate:"min=3,max=30,regexp=^((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[a-z]).*$" bson:"password" json:"password"`
+	Phone       string    `validate:"len=11,regexp=^1[34578]\d{9}$" bson:"phone" json:"phone"`
 	InviteCode  string    `bson:"inviteCode" json:"inviteCode"`
 	IsActivated bool      `bson:"isActivated" json:"isActivated"`
 	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`
