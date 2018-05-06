@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
@@ -26,7 +27,7 @@ func RegisterHandler(c *gin.Context) {
 			return
 		}
 	}
-
+	rand.Seed(time.Now().Unix())
 	info.InviteCode = fmt.Sprintf("%04d", rand.Intn(10000))
 	info.Password, err = middleware.HashPassword(info.Password)
 	if err != nil {
