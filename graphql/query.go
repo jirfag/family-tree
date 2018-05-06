@@ -10,6 +10,7 @@ var queryUser = graphql.Field{
 	Type:        graphql.NewList(userType),
 
 	Args: graphql.FieldConfigArgument{
+		"id":       &graphql.ArgumentConfig{Type: graphql.String},
 		"username": &graphql.ArgumentConfig{Type: graphql.String},
 		"phone":    &graphql.ArgumentConfig{Type: graphql.String},
 		"email":    &graphql.ArgumentConfig{Type: graphql.String},

@@ -1,10 +1,14 @@
-schema {
+type schema {
 	query: Query
 	mutation: Mutation
 }
 
 type Query {
-	user(slug: String!): User
+	user(id: String!, username: String!, phone: String!, email: String!): User
+}
+
+type Mutation {
+	updateUser(username: String!): User
 }
 
 type User {
