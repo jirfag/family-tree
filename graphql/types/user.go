@@ -56,10 +56,10 @@ type User struct {
 	Loaction         string        `bson:"location" json:"location"`
 	InviteCode       string        `bson:"inviteCode" json:"inviteCode"`
 	CreatedTime      string        `bson:"createdTime" json:"createdTime"`
-	IsGraduated      string        `bson:"isGraduated" json:"isGraduated"`
-	IsActivated      string        `bson:"isActivated" json:"isActivated"`
-	IsBasicCompleted string        `bson:"isBasicCompleted" json:"isBasicCompleted"`
-	IsAdmin          string        `bson:"isAdmin" json:"isAdmin"`
+	IsGraduated      bool          `bson:"isGraduated" json:"isGraduated"`
+	IsActivated      bool          `bson:"isActivated" json:"isActivated"`
+	IsBasicCompleted bool          `bson:"isBasicCompleted" json:"isBasicCompleted"`
+	IsAdmin          bool          `bson:"isAdmin" json:"isAdmin"`
 	MentorsID        []int         `bson:"mentorsID" json:"mentorsID"`
 	MenteesID        []int         `bson:"menteesID" json:"menteesID"`
 	GroupsID         []int         `bson:"groupsID" json:"groupsID"`

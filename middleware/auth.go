@@ -1,12 +1,15 @@
 package middleware
 
 import (
+	"family-tree/db"
+	t "family-tree/graphql/types"
 	"family-tree/utils"
-
-	"time"
-
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/mgo.v2/bson"
+	"log"
+	"time"
 )
 
 var AuthMiddleware = &jwt.GinJWTMiddleware{
@@ -14,19 +17,34 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 	Key:        []byte(utils.AppConfig.Server.SecretKey),
 	Timeout:    time.Hour * 24,
 	MaxRefresh: time.Hour,
-	Authenticator: func(userId string, password string, c *gin.Context) (string, bool) {
-		if (userId == "admin" && password == "admin") || (userId == "test" && password == "test") {
-			return userId, true
+	Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
+		var p = bson.M{}
+		var res t.User
+
+		err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
+		if err != nil {
+			log.Fatal("GetUser: ", err)
+			return "error", false
 		}
 
-		return userId, false
+		isOK := CheckPasswordHash(res.Password, password)
+		if isOK {
+			return res.Username, true
+		}
+
+		return username, false
 	},
 	Authorizator: func(userId string, c *gin.Context) bool {
-		if userId == "admin" {
-			return true
+		var p = bson.M{}
+		var res t.User
+
+		err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
+		if err != nil {
+			log.Fatal("GetUser: ", err)
+			return false
 		}
 
-		return false
+		return res.IsAdmin
 	},
 	Unauthorized: func(c *gin.Context, code int, message string) {
 		c.JSON(code, gin.H{
@@ -50,4 +68,13 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 
 	// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
 	TimeFunc: time.Now,
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
 }

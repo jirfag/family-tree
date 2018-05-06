@@ -6,5 +6,6 @@ import (
 
 // Schema is the GraphQL Schema served by the server.
 var Schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-	Query: rootQuery,
+	Query:    rootQuery,
+	Mutation: rootMutation,
 })
