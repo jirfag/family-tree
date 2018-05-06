@@ -51,6 +51,14 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 	if isOK {
 		p["username"] = username
 	}
+
+	// check user exist
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": username}).One(&p)
+	if err != nil {
+		log.Fatal("Update User: ", err)
+	}
+
+	// load data
 	password, isOK := params.Args["password"].(string)
 	if isOK {
 		p["password"], _ = middleware.HashPassword(password)
@@ -99,12 +107,6 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 	IsAdmin, isOK := params.Args["IsAdmin"].(bool)
 	if isOK {
 		p["IsAdmin"] = IsAdmin
-	}
-
-	// check user exist
-	count, err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": username}).Count()
-	if count == 0 || err != nil {
-		log.Fatal("Update User: ", err)
 	}
 
 	// update user
