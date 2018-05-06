@@ -4,14 +4,16 @@ import (
 	"family-tree/db"
 	t "family-tree/graphql/types"
 	"family-tree/utils"
+	"log"
+	"time"
+
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
-	"log"
-	"time"
 )
 
+// AuthMiddleware is a middleware to validate
 var AuthMiddleware = &jwt.GinJWTMiddleware{
 	Realm:      "test zone",
 	Key:        []byte(utils.AppConfig.Server.SecretKey),
@@ -69,10 +71,13 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 	TimeFunc: time.Now,
 }
 
+// CheckPasswordHash is a func to check password hash
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
+
+// HashPassword is a func to hash password
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err

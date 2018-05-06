@@ -2,6 +2,7 @@ package types
 
 import "gopkg.in/mgo.v2/bson"
 
+// User is User type
 type User struct {
 	ID               bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Password         string        `bson:"password" json:"password"`
@@ -23,7 +24,8 @@ type User struct {
 	GroupsID         []int         `bson:"groupsID" json:"groupsID"`
 }
 
-type Activities struct {
+// Activity locate user actions
+type Activity struct {
 	Action   string `bson:"password" json:"password"`
 	Username string `bson:"username" json:"username"`
 }

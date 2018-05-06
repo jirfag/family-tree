@@ -13,6 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// RegisterHandler is a func to handler register request
 func RegisterHandler(c *gin.Context) {
 	var info register
 	c.BindJSON(&info)
@@ -27,7 +28,9 @@ func RegisterHandler(c *gin.Context) {
 			return
 		}
 	}
+
 	rand.Seed(time.Now().Unix())
+	info.CreatedTime = time.Now()
 	info.InviteCode = fmt.Sprintf("%04d", rand.Intn(10000))
 	info.Password, err = middleware.HashPassword(info.Password)
 	if err != nil {
@@ -44,6 +47,7 @@ func RegisterHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
+// VerifyCodeHandler is a func to verify sms code
 func VerifyCodeHandler(c *gin.Context) {
 	var data register
 	var info register
@@ -72,9 +76,10 @@ func VerifyCodeHandler(c *gin.Context) {
 }
 
 type register struct {
-	Username    string `bson:"username" json:"username"`
-	Password    string `bson:"password" json:"password"`
-	Phone       string `bson:"phone" json:"phone"`
-	InviteCode  string `bson:"inviteCode" json:"inviteCode"`
-	IsActivated bool   `bson:"isActivated" json:"isActivated"`
+	Username    string    `bson:"username" json:"username"`
+	Password    string    `bson:"password" json:"password"`
+	Phone       string    `bson:"phone" json:"phone"`
+	InviteCode  string    `bson:"inviteCode" json:"inviteCode"`
+	IsActivated bool      `bson:"isActivated" json:"isActivated"`
+	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`
 }

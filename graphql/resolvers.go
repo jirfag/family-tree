@@ -1,21 +1,23 @@
 package graphql
 
 import (
+	"errors"
 	"family-tree/db"
 	t "family-tree/graphql/types"
 	"family-tree/middleware"
 	"family-tree/utils"
+	"log"
+
 	"github.com/graphql-go/graphql"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 )
 
+// GetUser is a graphql resolver to get user info
 func GetUser(params graphql.ResolveParams) (interface{}, error) {
-
 	var res []t.User
 	var p = bson.M{}
 
-	id, isOK := params.Args["id"].(string)
+	id, isOK := params.Args["id"].(bson.ObjectId)
 	if isOK {
 		p["id"] = id
 	}
@@ -42,7 +44,9 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 	return res, nil
 }
 
+// UpdateUser is a graphql resolver to update user info
 func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
+
 	var res t.User
 	var p = bson.M{}
 
@@ -55,68 +59,75 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 	// check user exist
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": username}).One(&p)
 	if err != nil {
-		log.Fatal("Update User: ", err)
+		log.Println("Update User: ", err)
 	}
 
-	// load data
-	password, isOK := params.Args["password"].(string)
-	if isOK {
-		p["password"], _ = middleware.HashPassword(password)
-	}
-	realname, isOK := params.Args["realname"].(string)
-	if isOK {
-		p["realname"] = realname
-	}
-	email, isOK := params.Args["email"].(string)
-	if isOK {
-		p["email"] = email
-	}
-	phone, isOK := params.Args["phone"].(string)
-	if isOK {
-		p["phone"] = phone
-	}
-	avatar, isOK := params.Args["avatar"].(string)
-	if isOK {
-		p["avatar"] = avatar
-	}
-	wechat, isOK := params.Args["wechat"].(string)
-	if isOK {
-		p["wechat"] = wechat
-	}
-	loaction, isOK := params.Args["loaction"].(string)
-	if isOK {
-		p["loaction"] = loaction
-	}
-	inviteCode, isOK := params.Args["inviteCode"].(string)
-	if isOK {
-		p["inviteCode"] = inviteCode
-	}
+	if params.Context.Value("User") == username {
+		// load data
+		id, isOK := params.Args["id"].(bson.ObjectId)
+		if isOK {
+			p["id"] = id
+		}
+		password, isOK := params.Args["password"].(string)
+		if isOK {
+			p["password"], _ = middleware.HashPassword(password)
+		}
+		realname, isOK := params.Args["realname"].(string)
+		if isOK {
+			p["realname"] = realname
+		}
+		email, isOK := params.Args["email"].(string)
+		if isOK {
+			p["email"] = email
+		}
+		phone, isOK := params.Args["phone"].(string)
+		if isOK {
+			p["phone"] = phone
+		}
+		avatar, isOK := params.Args["avatar"].(string)
+		if isOK {
+			p["avatar"] = avatar
+		}
+		wechat, isOK := params.Args["wechat"].(string)
+		if isOK {
+			p["wechat"] = wechat
+		}
+		loaction, isOK := params.Args["loaction"].(string)
+		if isOK {
+			p["loaction"] = loaction
+		}
+		inviteCode, isOK := params.Args["inviteCode"].(string)
+		if isOK {
+			p["inviteCode"] = inviteCode
+		}
 
-	isGraduate, isOK := params.Args["isGraduate"].(bool)
-	if isOK {
-		p["isGraduate"] = isGraduate
-	}
-	IsActivated, isOK := params.Args["IsActivated"].(bool)
-	if isOK {
-		p["IsActivated"] = IsActivated
-	}
-	IsBasicCompleted, isOK := params.Args["IsBasicCompleted"].(bool)
-	if isOK {
-		p["IsBasicCompleted"] = IsBasicCompleted
-	}
-	IsAdmin, isOK := params.Args["IsAdmin"].(bool)
-	if isOK {
-		p["IsAdmin"] = IsAdmin
-	}
+		isGraduate, isOK := params.Args["isGraduate"].(bool)
+		if isOK {
+			p["isGraduate"] = isGraduate
+		}
+		IsActivated, isOK := params.Args["IsActivated"].(bool)
+		if isOK {
+			p["IsActivated"] = IsActivated
+		}
+		IsBasicCompleted, isOK := params.Args["IsBasicCompleted"].(bool)
+		if isOK {
+			p["IsBasicCompleted"] = IsBasicCompleted
+		}
+		IsAdmin, isOK := params.Args["IsAdmin"].(bool)
+		if isOK {
+			p["IsAdmin"] = IsAdmin
+		}
 
-	// update user
-	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": username}, p)
-	if err != nil {
-		log.Fatal("Update User: ", err)
-	}
+		// update user
+		err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": username}, p)
+		if err != nil {
+			log.Fatal("Update User: ", err)
+		}
 
-	// return data
-	bsonBytes, _ := bson.Marshal(p)
-	bson.Unmarshal(bsonBytes, &res)
-	return res, nil
+		// return data
+		bsonBytes, _ := bson.Marshal(p)
+		bson.Unmarshal(bsonBytes, &res)
+		return res, nil
+	}
+	return nil, errors.New("You Couldn't Change other's info")
 }

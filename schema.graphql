@@ -1,26 +1,30 @@
 schema {
-  query: Query
-  mutation: Mutation
+	query: Query
+	mutation: Mutation
 }
 
-type  user {
-  id: ID!
-  password: String!
-  username: String!
-  realname: String!
-  email: String!
-  phone: String!
-  avatar: String!
-  wechat: String!
-  loaction: String!
-  inviteCode: String!
-  createdTime: String!
-  isGraduate: Boolean!
-  isActivated: Boolean!
-  isBasicCompleted: Boolean!
-  isAdmin: Boolean!
-  activities: [activity]
-  mentors: [user]
-  mentees: [user]
-  groups: [group]
+type Query {
+	user(slug: String!): User
+}
+
+type User {
+	id: ID!
+	password: String!
+	username: String!
+	realname: String!
+	email: String!
+	phone: String!
+	avatar: String!
+	wechat: String!
+	loaction: String!
+	inviteCode: String!
+	createdTime: String!
+	isGraduate: Boolean!
+	isActivated: Boolean!
+	isBasicCompleted: Boolean!
+	isAdmin: Boolean!
+	activities: [activity]
+	mentors: [user]
+	mentees: [user]
+	groups: [group]
 }
