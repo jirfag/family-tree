@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type Projects struct {
+type Project struct {
 	ID          uint64    `json:"id" bson:"_id,omitempty"`
 	Title       string    `bson:"title" json:"title"`
 	Description string    `bson:"description" json:"description"`
@@ -12,6 +12,6 @@ type Projects struct {
 	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`
 	AdminID     string    `bson:"adminID" json:"adminID"`
 	Logo        string    `bson:"logo" json:"logo"`
-	Image       []string  `bson:"image" json:"image"`
-	members     []User    `bson:"members" json:"members"`
+	Images      []string  `bson:"image" json:"image"`
+	Members     []User    `bson:"members" json:"members"`
 }

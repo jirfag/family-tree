@@ -35,12 +35,12 @@ var queryGroup = graphql.Field{
 var queryProject = graphql.Field{
 	Name:        "Project",
 	Description: "Query Project",
-	Type:        graphql.NewList(userType),
+	Type:        graphql.NewList(projectType),
 
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{Type: graphql.String},
 	},
-	Resolve: GetUser,
+	Resolve: GetProject,
 }
 
 // 定义root查询节点

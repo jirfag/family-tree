@@ -25,7 +25,7 @@ func Handler() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST,OPTIONS")
 
 		h.ServeHTTP(c.Writer, c.Request.WithContext(context.WithValue(ctx, "User", userID)))
 	}

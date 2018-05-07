@@ -75,6 +75,49 @@ func GetGroup(params graphql.ResolveParams) (interface{}, error) {
 	return res, nil
 }
 
+// GetProject is a graphql resolver to get user info
+func GetProject(params graphql.ResolveParams) (interface{}, error) {
+	var res []t.Project
+	var p = bson.M{}
+
+	id, isOK := params.Args["id"].(uint64)
+	if isOK {
+		p["id"] = id
+	}
+
+	title, isOK := params.Args["title"].(string)
+	if isOK {
+		p["title"] = title
+	}
+	description, isOK := params.Args["description"].(string)
+	if isOK {
+		p["description"] = description
+	}
+	year, isOK := params.Args["year"].(int)
+	if isOK {
+		p["year"] = year
+	}
+	createdTime, isOK := params.Args["createdTime"].(string)
+	if isOK {
+		p["createdTime"] = createdTime
+	}
+	adminID, isOK := params.Args["adminID"].(int)
+	if isOK {
+		p["adminID"] = adminID
+	}
+	logo, isOK := params.Args["logo"].(string)
+	if isOK {
+		p["logo"] = logo
+	}
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).All(&res)
+
+	if err != nil {
+		log.Println("Get Group: ", err)
+		return nil, nil
+	}
+	return res, nil
+}
+
 // UpdateUser is a graphql resolver to update user info
 func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 

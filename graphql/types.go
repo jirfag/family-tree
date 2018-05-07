@@ -69,3 +69,30 @@ var groupType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
+var projectType = graphql.NewObject(graphql.ObjectConfig{
+	Name:        "ProjectType",
+	Description: "Project Type",
+	Fields: graphql.Fields{
+		"id":          &graphql.Field{Type: graphql.Int},
+		"titile":      &graphql.Field{Type: graphql.String},
+		"description": &graphql.Field{Type: graphql.String},
+		"year":        &graphql.Field{Type: graphql.String},
+		"createdTime": &graphql.Field{Type: graphql.String},
+		"adminID":     &graphql.Field{Type: graphql.String},
+		"logo":        &graphql.Field{Type: graphql.String},
+		//"images": &graphql.Field{
+		//	Name: "user Type",
+		//	Type: graphql.NewNonNull(userType),
+		//	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		//		fmt.Println("User Type")
+		//		if group, ok := p.Source.(t.Group); ok {
+		//			log.Printf("fetching detail of user with username: %s", group.UserIDs)
+		//			return fetchUsersByIDs(group.UserIDs)
+		//		}
+		//		fmt.Println("Detail Type Error")
+		//		return nil, nil
+		//	},
+		//},
+	},
+})

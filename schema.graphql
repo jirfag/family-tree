@@ -49,8 +49,8 @@ type Project {
 	description: String!
 	year: Int!
 	createdTime: String!
-	adminID: ID!
+	adminID: Int!
 	logo: String!
-	image: [String!]
+	images: [String!]
 	members: [User]
 }
