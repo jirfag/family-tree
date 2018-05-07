@@ -13,22 +13,33 @@ import (
 
 func main() {
 	r := gin.Default()
+
+	// CORS support
+	r.Use(middleware.CORSMiddleware())
+
+	// AUTH & Login
 	r.POST("/login", middleware.AuthMiddleware.LoginHandler)
 	r.POST("/register", handler.RegisterHandler)
 	r.POST("/code", handler.VerifyCodeHandler)
 
+	// Main Handler
 	auth := r.Group("/")
 	auth.Use(middleware.AuthMiddleware.MiddlewareFunc())
 	{
 		auth.POST("/graphql", graphql.Handler())
 		auth.GET("/refresh_token", middleware.AuthMiddleware.RefreshHandler)
 	}
+
+	// Healthcheck
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "pong", "code": 200})
 	})
-	showStatus()
-	r.Run(utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port)
 
+	// Show Status
+	showStatus()
+
+	// Run Server
+	r.Run(utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port)
 }
 
 func showStatus() {

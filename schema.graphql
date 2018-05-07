@@ -4,7 +4,8 @@ type schema {
 }
 
 type Query {
-	user(id: String!, username: String!, phone: String!, email: String!): User
+	user(id: Int!, username: String!, phone: String!, email: String!): User
+	group(id: Int!, groupName: String!, startYear: Int!, endYear: Int!): Group
 }
 
 type Mutation {
