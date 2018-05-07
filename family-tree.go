@@ -6,16 +6,16 @@ import (
 	"family-tree/middleware"
 	"family-tree/utils"
 	"fmt"
-	"net/http"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func main() {
 	r := gin.Default()
 
 	// CORS support
-	r.Use(middleware.CORSMiddleware())
+	r.Use(cors.New(middleware.CORSConfig))
 
 	// AUTH & Login
 	r.POST("/login", middleware.AuthMiddleware.LoginHandler)
