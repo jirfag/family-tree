@@ -29,6 +29,11 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 			return "error", false
 		}
 
+		if res.IsActivated != true {
+			log.Println("GetUser: ", err)
+			return "Please verify your account.", false
+		}
+
 		isOK := CheckPasswordHash(password, res.Password)
 		if isOK {
 			return res.Username, true

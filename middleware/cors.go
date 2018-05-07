@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"os"
 	"time"
 )
@@ -17,15 +19,32 @@ func loadConfig() cors.Config {
 	}
 	config := cors.Config{
 		AllowOrigins:     Origins,
-		AllowMethods:     []string{"PUT", "PATCH"},
-		AllowHeaders:     []string{"Origin"},
+		AllowMethods:     []string{"GET", "PUT", "OPTIONS", "PATCH"},
+		AllowHeaders:     []string{"Origin", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
+			fmt.Println(origin)
 			return true
 			//return origin == "https://github.com"
 		},
 		MaxAge: 12 * time.Hour,
 	}
 	return config
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
