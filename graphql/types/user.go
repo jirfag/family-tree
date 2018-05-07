@@ -20,7 +20,10 @@ type User struct {
 	IsActivated      bool      `bson:"isActivated" json:"isActivated"`
 	IsBasicCompleted bool      `bson:"isBasicCompleted" json:"isBasicCompleted"`
 	IsAdmin          bool      `bson:"isAdmin" json:"isAdmin"`
-	MentorsID        []int     `bson:"mentorsID" json:"mentorsID"`
-	MenteesID        []int     `bson:"menteesID" json:"menteesID"`
-	GroupsID         []int     `bson:"groupsID" json:"groupsID"`
+	Mentors          []User    `bson:"mentors" json:"mentors"`
+	Mentees          []User    `bson:"mentees" json:"mentees"`
+	Groups           []Group   `bson:"groups" json:"groups"`
+	MentorIDs        []uint64  `bson:"mentorIDs" json:"mentorIDs"`
+	MenteeIDs        []uint64  `bson:"menteeIDs" json:"menteeIDs"`
+	GroupIDs         []uint64  `bson:"groupIDs" json:"groupIDs"`
 }

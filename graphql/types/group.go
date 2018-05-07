@@ -10,6 +10,6 @@ type Group struct {
 	StartYear   int       `bson:"startYear" json:"startYear"`
 	EndYear     int       `bson:"endYear" json:"endYear"`
 	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`
-	Users       []User    `bson:"users" json:"users"`
-	UserIDs     []uint64  `bson:"userIDs" json:"userIDs"`
+	Members     []User    `bson:"members" json:"members"`
+	MemberIDs   []uint64  `bson:"memberIDs" json:"memberIDs"`
 }

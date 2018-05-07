@@ -46,22 +46,22 @@ var userType = graphql.NewObject(graphql.ObjectConfig{
 })
 
 var groupType = graphql.NewObject(graphql.ObjectConfig{
-	Name:        "UserType",
-	Description: "User Type",
+	Name:        "GroupType",
+	Description: "Group Type",
 	Fields: graphql.Fields{
 		"id":          &graphql.Field{Type: graphql.Int},
 		"groupName":   &graphql.Field{Type: graphql.String},
 		"startYear":   &graphql.Field{Type: graphql.String},
 		"endYear":     &graphql.Field{Type: graphql.String},
 		"createdTime": &graphql.Field{Type: graphql.String},
-		"users": &graphql.Field{
+		"members": &graphql.Field{
 			Name: "user Type",
-			Type: graphql.NewNonNull(userType),
+			Type: graphql.NewList(userType),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				fmt.Println("User Type")
 				if group, ok := p.Source.(t.Group); ok {
-					log.Printf("fetching detail of user with username: %s", group.UserIDs)
-					return fetchUsersByIDs(group.UserIDs)
+					log.Printf("fetching Users of Group with IDS: %s", group.MemberIDs)
+					return fetchUsersByIDs(group.MemberIDs)
 				}
 				fmt.Println("Detail Type Error")
 				return nil, nil
@@ -77,10 +77,12 @@ var projectType = graphql.NewObject(graphql.ObjectConfig{
 		"id":          &graphql.Field{Type: graphql.Int},
 		"titile":      &graphql.Field{Type: graphql.String},
 		"description": &graphql.Field{Type: graphql.String},
-		"year":        &graphql.Field{Type: graphql.String},
-		"createdTime": &graphql.Field{Type: graphql.String},
-		"adminID":     &graphql.Field{Type: graphql.String},
+		"year":        &graphql.Field{Type: graphql.Int},
+		"startedTime": &graphql.Field{Type: graphql.String},
+		"endedTime":   &graphql.Field{Type: graphql.String},
+		"adminID":     &graphql.Field{Type: graphql.ID},
 		"logo":        &graphql.Field{Type: graphql.String},
+		"createdTime": &graphql.Field{Type: graphql.String},
 		//"images": &graphql.Field{
 		//	Name: "user Type",
 		//	Type: graphql.NewNonNull(userType),

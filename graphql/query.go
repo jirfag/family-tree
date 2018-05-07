@@ -43,7 +43,6 @@ var queryProject = graphql.Field{
 	Resolve: GetProject,
 }
 
-// 定义root查询节点
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name:        "RootQuery",
 	Description: "Root Query",

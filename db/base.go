@@ -26,7 +26,6 @@ func initDB() *mgo.Session {
 	if err != nil {
 		panic(err)
 	}
-	//defer session.Close()
 
 	return session
 }

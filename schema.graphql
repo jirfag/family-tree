@@ -32,6 +32,9 @@ type User {
 	mentors: [User]
 	mentees: [User]
 	groups: [Group]
+	mentorIDs: [Int!]
+	menteeIDs: [Int!]
+	groupIDs: [Int!]
 }
 
 type Group {
@@ -52,5 +55,6 @@ type Project {
 	adminID: Int!
 	logo: String!
 	images: [String!]
+	memberIDs: [Int!]
 	members: [User]
 }
