@@ -28,10 +28,11 @@ func main() {
 
 	// Main Handler
 	auth := r.Group("/")
-	auth.Use(middleware.AuthMiddleware.MiddlewareFunc(), middleware.CORSMiddleware())
+	auth.Use(middleware.AuthMiddleware.MiddlewareFunc())
 	{
 		auth.POST("/graphql", graphql.Handler())
 		auth.GET("/refresh_token", middleware.AuthMiddleware.RefreshHandler)
+		auth.GET("/init_db", handler.InitDB)
 	}
 
 	// Show Status

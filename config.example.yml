@@ -22,4 +22,6 @@ redis:
   password:
   db:       temp
 
-
+root:
+  username: username
+  password: password

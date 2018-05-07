@@ -38,6 +38,11 @@ type Config struct {
 		Password string `default:""`
 		DB       string `default:"db"`
 	}
+
+	Root struct {
+		Username string `required:"true"`
+		Password string `required:"true"`
+	}
 }
 
 // LoadConfiguration is a function to load cfg from file
