@@ -6,10 +6,12 @@ import (
 	t "family-tree/graphql/types"
 	"family-tree/middleware"
 	"family-tree/utils"
-	"log"
 
 	"github.com/graphql-go/graphql"
+	"github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2/bson"
+	"log"
+	"time"
 )
 
 // GetUser is a graphql resolver to get user info
@@ -116,6 +118,44 @@ func GetProject(params graphql.ResolveParams) (interface{}, error) {
 		return nil, nil
 	}
 	return res, nil
+}
+
+// AddGroup is a graphql resolver to add user group
+func AddGroup(params graphql.ResolveParams) (interface{}, error) {
+
+	var res t.Group
+
+	// Generate ID
+	res.ID = ai.Next("group")
+
+	// load data
+	groupName, isOK := params.Args["groupName"].(string)
+	if isOK {
+		res.GroupName = groupName
+	}
+	startYear, isOK := params.Args["startYear"].(int)
+	if isOK {
+		res.StartYear = startYear
+	}
+	endYear, isOK := params.Args["endYear"].(int)
+	if isOK {
+		res.EndYear = endYear
+	}
+	memberIDs, isOK := params.Args["memberIDs"].([]uint64)
+
+	if isOK {
+		res.MemberIDs = memberIDs
+	}
+
+	res.CreatedTime = time.Now()
+	// update user
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Insert(res)
+	if err != nil {
+		log.Fatal("Add Group: ", err)
+	}
+
+	return res, nil
+
 }
 
 // UpdateUser is a graphql resolver to update user info

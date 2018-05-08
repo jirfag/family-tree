@@ -2,9 +2,7 @@ package graphql
 
 import (
 	t "family-tree/graphql/types"
-	"fmt"
 	"github.com/graphql-go/graphql"
-	"log"
 )
 
 var userType = graphql.NewObject(graphql.ObjectConfig{
@@ -25,23 +23,20 @@ var userType = graphql.NewObject(graphql.ObjectConfig{
 		"IsActivated":      &graphql.Field{Type: graphql.Boolean},
 		"IsBasicCompleted": &graphql.Field{Type: graphql.Boolean},
 		"IsAdmin":          &graphql.Field{Type: graphql.Boolean},
-		//"MentorsID"        []int         `bson:"mentorsID" json:"mentorsID"`
-		//"MenteesID"        []int         `bson:"menteesID" json:"menteesID"`
-		//"GroupsID"         []int         `bson:"groupsID" json:"groupsID"`
-
-		//"detail": &graphql.Field{
-		//	Name: "Detail Type",
-		//	Type: graphql.NewNonNull(detailType),
-		//	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-		//		fmt.Println("Detail Type")
-		//		if user, ok := p.Source.(User); ok {
-		//			log.Printf("fetching detail of user with username: %s", user.Username)
-		//			return fetchDetailByUsername(user.Username)
-		//		}
-		//		fmt.Println("Detail Type Error")
-		//		return nil, nil
-		//	},
-		//},
+		"mentorsID": &graphql.Field{
+			Name: "mentorsID Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.User).MentorIDs, nil
+			},
+		},
+		"groupsID": &graphql.Field{
+			Name: "mentorsID Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.User).GroupIDs, nil
+			},
+		},
 	},
 })
 
@@ -54,17 +49,11 @@ var groupType = graphql.NewObject(graphql.ObjectConfig{
 		"startYear":   &graphql.Field{Type: graphql.String},
 		"endYear":     &graphql.Field{Type: graphql.String},
 		"createdTime": &graphql.Field{Type: graphql.String},
-		"members": &graphql.Field{
-			Name: "user Type",
-			Type: graphql.NewList(userType),
+		"memberIDs": &graphql.Field{
+			Name: "memberIDs Type",
+			Type: graphql.NewList(graphql.Int),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				fmt.Println("User Type")
-				if group, ok := p.Source.(t.Group); ok {
-					log.Printf("fetching Users of Group with IDS: %s", group.MemberIDs)
-					return fetchUsersByIDs(group.MemberIDs)
-				}
-				fmt.Println("Detail Type Error")
-				return nil, nil
+				return p.Source.(t.Group).MemberIDs, nil
 			},
 		},
 	},
@@ -83,18 +72,19 @@ var projectType = graphql.NewObject(graphql.ObjectConfig{
 		"adminID":     &graphql.Field{Type: graphql.ID},
 		"logo":        &graphql.Field{Type: graphql.String},
 		"createdTime": &graphql.Field{Type: graphql.String},
-		//"images": &graphql.Field{
-		//	Name: "user Type",
-		//	Type: graphql.NewNonNull(userType),
-		//	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-		//		fmt.Println("User Type")
-		//		if group, ok := p.Source.(t.Group); ok {
-		//			log.Printf("fetching detail of user with username: %s", group.UserIDs)
-		//			return fetchUsersByIDs(group.UserIDs)
-		//		}
-		//		fmt.Println("Detail Type Error")
-		//		return nil, nil
-		//	},
-		//},
+		"images": &graphql.Field{
+			Name: "images Type",
+			Type: graphql.NewList(graphql.String),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.Project).Images, nil
+			},
+		},
+		"memberIDs": &graphql.Field{
+			Name: "memberIDs Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.Project).MemberIDs, nil
+			},
+		},
 	},
 })

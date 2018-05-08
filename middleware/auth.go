@@ -4,29 +4,31 @@ import (
 	"family-tree/db"
 	t "family-tree/graphql/types"
 	"family-tree/utils"
-	"log"
-	"time"
 
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
+	"github.com/vmihailenco/msgpack"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
+	"log"
+	"time"
 )
 
 // AuthMiddleware is a middleware to validate
 var AuthMiddleware = &jwt.GinJWTMiddleware{
-	Realm:      "test zone",
+	Realm:      "Auth Middleware",
 	Key:        []byte(utils.AppConfig.Server.SecretKey),
 	Timeout:    time.Hour * 24,
 	MaxRefresh: time.Hour,
 	Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
-		var p = bson.M{}
-		var res t.User
 
-		err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
+		res, err := fetchUserFromRedis(username)
 		if err != nil {
-			log.Println("GetUser: ", err)
-			return "error", false
+			log.Println("User Cache Do Not Exist", err)
+			res, err = fetchUserFromMongo(username)
+			if err != nil {
+				log.Println("fetchUserFromMongo", err)
+			}
 		}
 
 		if res.IsActivated != true {
@@ -36,20 +38,41 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 
 		isOK := CheckPasswordHash(password, res.Password)
 		if isOK {
+			cache, _ := msgpack.Marshal(&res)
+			db.RedisClient.Set(res.Username, cache, 0)
+			return res.Username, true
+		}
+
+		// Wrong passwork in cache, fetch user from mongo
+		log.Println(username, "Wrong passwork in cache, fetch user from mongo")
+		res, err = fetchUserFromMongo(username)
+		isOK = CheckPasswordHash(password, res.Password)
+
+		if isOK {
+			cache, _ := msgpack.Marshal(&res)
+			db.RedisClient.Set(res.Username, cache, 0)
 			return res.Username, true
 		}
 
 		return username, false
 	},
-	Authorizator: func(userId string, c *gin.Context) bool {
-		var p = bson.M{}
-		var res t.User
+	Authorizator: func(username string, c *gin.Context) bool {
 
-		err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
+		res, err := fetchUserFromRedis(username)
+
 		if err != nil {
+			log.Println("User Cache Do Not Exist", err)
+			res, err = fetchUserFromMongo(username)
+			if err != nil {
+				log.Println("fetchUserFromMongo", err)
+			}
+		}
+
+		if err != nil || res.Username == "" {
 			log.Println("GetUser: ", err)
 			return false
 		}
+
 		return true
 	},
 	Unauthorized: func(c *gin.Context, code int, message string) {
@@ -86,4 +109,31 @@ func CheckPasswordHash(password, hash string) bool {
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
+}
+
+func fetchUserFromMongo(username string) (user t.User, err error) {
+	var p = bson.M{}
+	var res = t.User{}
+
+	p["username"] = username
+	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
+	if err != nil || res.Username == "" {
+		log.Println("GetUser: ", err)
+		return res, err
+	}
+	return res, nil
+}
+
+func fetchUserFromRedis(username string) (user t.User, err error) {
+
+	var res = t.User{}
+
+	resp, _ := db.RedisClient.Get(username).Bytes()
+	err = msgpack.Unmarshal(resp, &res)
+	if err != nil {
+		log.Println("GetUser: ", err)
+		return res, err
+	}
+
+	return res, nil
 }
