@@ -14,7 +14,6 @@ type Project struct {
 	AdminID     string    `bson:"adminID" json:"adminID"`
 	Logo        string    `bson:"logo" json:"logo"`
 	Images      []string  `bson:"image" json:"image"`
-	Members     []User    `bson:"members" json:"members"`
 	MemberIDs   []uint64  `bson:"memberIDs" json:"memberIDs"`
 	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`
 }
