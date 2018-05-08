@@ -141,10 +141,15 @@ func AddGroup(params graphql.ResolveParams) (interface{}, error) {
 	if isOK {
 		res.EndYear = endYear
 	}
-	memberIDs, isOK := params.Args["memberIDs"].([]uint64)
+
+	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
 
 	if isOK {
-		res.MemberIDs = memberIDs
+		for i := range memberIDs {
+			log.Println("memberIDs[i]", memberIDs[i])
+			res.MemberIDs = append(res.MemberIDs, uint64(memberIDs[i].(int)))
+		}
+
 	}
 
 	res.CreatedTime = time.Now()
@@ -238,6 +243,25 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 			p["IsAdmin"] = IsAdmin
 		}
 
+		mentorIDs, isOK := params.Args["mentorIDs"].([]interface{})
+
+		if isOK {
+			for i := range mentorIDs {
+				log.Println("mentorIDs[i]", mentorIDs[i])
+				res.MentorIDs = append(res.MentorIDs, uint64(mentorIDs[i].(int)))
+			}
+
+		}
+
+		menteeIDs, isOK := params.Args["menteeIDs"].([]interface{})
+
+		if isOK {
+			for i := range mentorIDs {
+				log.Println("mentorIDs[i]", menteeIDs[i])
+				res.MenteeIDs = append(res.MenteeIDs, uint64(menteeIDs[i].(int)))
+			}
+
+		}
 		// update user
 		err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": username}, p)
 		if err != nil {

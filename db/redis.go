@@ -2,21 +2,16 @@ package db
 
 import (
 	"family-tree/utils"
-	"fmt"
 	"github.com/go-redis/redis"
 )
 
-func Client() *redis.Client {
+var RedisClient = redisClient()
+
+func redisClient() *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:     utils.AppConfig.Redis.Host + ":" + utils.AppConfig.Redis.Port,
-		Password: utils.AppConfig.Redis.Password, // no password set
-		DB:       utils.AppConfig.Redis.DB,       // use default DB
+		Password: utils.AppConfig.Redis.Password,
+		DB:       utils.AppConfig.Redis.DB,
 	})
-
-	pong, err := client.Ping().Result()
-	fmt.Println(pong, err)
-
 	return client
 }
-
-var RedisClient = Client()

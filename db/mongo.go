@@ -2,14 +2,15 @@ package db
 
 import (
 	"family-tree/utils"
+	"log"
 
 	ai "github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2"
 )
 
-var DBSession = initDB()
+var DBSession = mongoClient()
 
-func initDB() *mgo.Session {
+func mongoClient() *mgo.Session {
 
 	info := &mgo.DialInfo{
 		Addrs:    []string{utils.AppConfig.Mongo.Host + ":" + utils.AppConfig.Mongo.Port},
@@ -24,7 +25,7 @@ func initDB() *mgo.Session {
 	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("group"))
 
 	if err != nil {
-		panic(err)
+		log.Println("mongoClient", err)
 	}
 
 	return session

@@ -22,7 +22,9 @@ var addGroup = graphql.Field{
 		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
 		"startYear": &graphql.ArgumentConfig{Type: graphql.Int},
 		"endYear":   &graphql.ArgumentConfig{Type: graphql.Int},
-		"memberIDs": &graphql.ArgumentConfig{Type: graphql.NewList(graphql.Int)},
+		"memberIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
 	},
 	Resolve: AddGroup,
 }
