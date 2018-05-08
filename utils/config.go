@@ -36,7 +36,7 @@ type Config struct {
 		Host     string `default:"127.0.0.1"`
 		Port     string `default:"6379"`
 		Password string `default:""`
-		DB       string `default:"db"`
+		DB       int    `default:"db"`
 	}
 
 	Root struct {

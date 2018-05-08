@@ -1,20 +1,21 @@
 package db
 
 import (
+	"family-tree/utils"
 	"fmt"
 	"github.com/go-redis/redis"
 )
 
 func Client() *redis.Client {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     utils.AppConfig.Redis.Host + ":" + utils.AppConfig.Redis.Port,
+		Password: utils.AppConfig.Redis.Password, // no password set
+		DB:       utils.AppConfig.Redis.DB,       // use default DB
 	})
 
 	pong, err := client.Ping().Result()
 	fmt.Println(pong, err)
-	// Output: PONG <nil>
+
 	return client
 }
 
