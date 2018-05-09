@@ -4,12 +4,59 @@ type schema {
 }
 
 type Query {
-	user(id: Int!, username: String!): User
-	group(id: Int!): Group
+	user(
+		id: Int # unique
+		username: String # unique
+		phone: String # unique
+		email: String # unique
+	): User
+	group(
+		id: Int # unique
+		groupName: String
+		startYear: Int
+		endYear: Int
+		createdTime: String
+		fromGroupID: Int
+		toGroupID: Int
+	): Group
+	company(
+		id: Int # unique
+		name: String # unique
+		description: String
+		logo: String # image URL
+		images: [String] # image URL
+		userIDs: [Int]
+	): Compant
 }
 
 type Mutation {
-	updateUser(username: String!): User
+	updateUser(
+		username: String!
+		realname: String
+		email: String
+		phone: String
+		avatar: String
+		wechat: String
+		loaction: String
+		inviteCode: String
+		createdTime: String
+		isGraduate: Boolean
+		isActivated: Boolean
+		isBasicCompleted: Boolean
+		isAdmin: Boolean
+		projectIDs: [Project]
+		mentorIDs: [Int]
+		menteeIDs: [Int]
+		groupIDs: [int]
+	): User
+	addGroup(
+		groupName: String!
+		startYear: Int!
+		endYear: Int!
+		fromGroupID: Int!
+		toGroupID: int!
+		userIDs: [Int]
+	): Group
 }
 
 type User {
@@ -28,11 +75,12 @@ type User {
 	isActivated: Boolean
 	isBasicCompleted: Boolean
 	isAdmin: Boolean
-	projects: [Project]
-	mentors: [User]
-	mentees: [User]
+	abilities: [String]
+	projectIDs: [Project]
 	mentorIDs: [Int]
 	menteeIDs: [Int]
+	groupIDs: [int]
+	companyIDs: [int]
 }
 
 type Group {
@@ -41,6 +89,9 @@ type Group {
 	startYear: Int!
 	endYear: Int! # 0 stands for up to now
 	createdTime: String! # 2018-05-06 18:49:48.032 +0800 CST
+	leaderIDs: [Int]
+	fromGroupID: Int!
+	toGroupID: int!
 	userIDs: [Int]
 }
 
@@ -51,7 +102,16 @@ type Project {
 	year: Int!
 	createdTime: String!
 	adminID: Int!
-	logo: String
-	images: [String]
+	logo: String # image URL
+	images: [String] # image URL
 	memberIDs: [Int]
+}
+
+type Company {
+	id: Int!
+	name: String!
+	description: String
+	logo: String # image URL
+	images: [String] # image URL
+	userIDs: [Int]
 }

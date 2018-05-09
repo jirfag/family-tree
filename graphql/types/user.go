@@ -20,6 +20,8 @@ type User struct {
 	IsActivated      bool      `bson:"isActivated" json:"isActivated"`
 	IsBasicCompleted bool      `bson:"isBasicCompleted" json:"isBasicCompleted"`
 	IsAdmin          bool      `bson:"isAdmin" json:"isAdmin"`
+	Abilities        []string  `bson:"abilities" json:"abilities"`
+	ProjectIDs       []uint64  `bson:"projectIDs" json:"projectIDs"`
 	MentorIDs        []uint64  `bson:"mentorIDs" json:"mentorIDs"`
 	MenteeIDs        []uint64  `bson:"menteeIDs" json:"menteeIDs"`
 	GroupIDs         []uint64  `bson:"groupIDs" json:"groupIDs"`

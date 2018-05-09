@@ -24,10 +24,12 @@ var queryGroup = graphql.Field{
 	Type:        graphql.NewList(groupType),
 
 	Args: graphql.FieldConfigArgument{
-		"id":        &graphql.ArgumentConfig{Type: graphql.String},
-		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
-		"startYear": &graphql.ArgumentConfig{Type: graphql.String},
-		"endYear":   &graphql.ArgumentConfig{Type: graphql.String},
+		"id":          &graphql.ArgumentConfig{Type: graphql.String},
+		"groupName":   &graphql.ArgumentConfig{Type: graphql.String},
+		"startYear":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"endYear":     &graphql.ArgumentConfig{Type: graphql.Int},
+		"fromGroupID": &graphql.ArgumentConfig{Type: graphql.Int},
+		"toGroupID":   &graphql.ArgumentConfig{Type: graphql.Int},
 	},
 	Resolve: GetGroup,
 }

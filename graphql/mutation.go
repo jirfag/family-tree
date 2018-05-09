@@ -1,7 +1,6 @@
 package graphql
 
 import (
-	//t "family-tree/graphql/types"
 	"github.com/graphql-go/graphql"
 )
 
@@ -17,6 +16,21 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 var addGroup = graphql.Field{
 	Name:        "Group",
 	Description: "Add group",
+	Type:        graphql.NewNonNull(groupType),
+	Args: graphql.FieldConfigArgument{
+		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
+		"startYear": &graphql.ArgumentConfig{Type: graphql.Int},
+		"endYear":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"memberIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+	},
+	Resolve: AddGroup,
+}
+
+var updateGroup = graphql.Field{
+	Name:        "Group",
+	Description: "Update group",
 	Type:        graphql.NewNonNull(groupType),
 	Args: graphql.FieldConfigArgument{
 		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
