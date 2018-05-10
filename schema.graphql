@@ -42,6 +42,14 @@ type Mutation {
 		toGroupID: int!
 		userIDs: [Int]
 	): Group
+	updateCompany(
+		name: String!
+		description: String
+		logo: String # image URL
+		images: [String] # image URL
+		createrID: Int
+		memberIDs: [Int]
+	): Company
 	updateGroup(
 		id: Int!
 		groupName: String
