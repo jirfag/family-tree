@@ -1,11 +1,12 @@
 package db
 
 import (
+	t "family-tree/graphql/types"
 	"family-tree/utils"
-	"log"
-
 	ai "github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"log"
 )
 
 var DBSession = mongoClient()
@@ -23,10 +24,24 @@ func mongoClient() *mgo.Session {
 	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("user"))
 	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("project"))
 	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("group"))
+	ai.Connect(session.DB(utils.AppConfig.Mongo.DB).C("company"))
 
 	if err != nil {
 		log.Println("mongoClient", err)
 	}
 
 	return session
+}
+
+func FetchUserFromMongo(username string) (user t.User, err error) {
+	var p = bson.M{}
+	var res = t.User{}
+
+	p["username"] = username
+	err = DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
+	if err != nil || res.Username == "" {
+		log.Println("GetUser: ", err)
+		return res, err
+	}
+	return res, nil
 }

@@ -9,28 +9,52 @@ type Query {
 		username: String # unique
 		phone: String # unique
 		email: String # unique
-	): User
+	): [User]
 	group(
 		id: Int # unique
 		groupName: String
 		startYear: Int
 		endYear: Int
-		createdTime: String
 		fromGroupID: Int
 		toGroupID: Int
-	): Group
+		createdTime: String
+	): [Group]
 	company(
 		id: Int # unique
 		name: String # unique
-		description: String
-		logo: String # image URL
-		images: [String] # image URL
-		userIDs: [Int]
-	): Compant
+	): [Company]
 }
 
 type Mutation {
+	addCompany(
+		name: String!
+		description: String
+		logo: String # image URL
+		images: [String] # image URL
+		createrID: Int
+		memberIDs: [Int]
+	): Company
+	addGroup(
+		groupName: String!
+		startYear: Int!
+		endYear: Int!
+		fromGroupID: Int!
+		toGroupID: int!
+		userIDs: [Int]
+	): Group
+	updateGroup(
+		id: Int!
+		groupName: String
+		startYear: Int
+		endYear: Int
+		createdTime: String
+		leaderIDs: [Int]
+		fromGroupID: Int
+		toGroupID: int
+		userIDs: [Int]
+	): Group
 	updateUser(
+		id: Int!
 		username: String!
 		realname: String
 		email: String
@@ -49,14 +73,6 @@ type Mutation {
 		menteeIDs: [Int]
 		groupIDs: [int]
 	): User
-	addGroup(
-		groupName: String!
-		startYear: Int!
-		endYear: Int!
-		fromGroupID: Int!
-		toGroupID: int!
-		userIDs: [Int]
-	): Group
 }
 
 type User {
@@ -92,7 +108,7 @@ type Group {
 	leaderIDs: [Int]
 	fromGroupID: Int!
 	toGroupID: int!
-	userIDs: [Int]
+	memberIDs: [Int]
 }
 
 type Project {
@@ -113,5 +129,6 @@ type Company {
 	description: String
 	logo: String # image URL
 	images: [String] # image URL
-	userIDs: [Int]
+	createrID: Int
+	memberIDs: [Int]
 }

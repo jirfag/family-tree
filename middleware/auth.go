@@ -2,14 +2,12 @@ package middleware
 
 import (
 	"family-tree/db"
-	t "family-tree/graphql/types"
 	"family-tree/utils"
 
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/vmihailenco/msgpack"
 	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/mgo.v2/bson"
 	"log"
 	"time"
 )
@@ -22,10 +20,10 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 	MaxRefresh: time.Hour,
 	Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
 
-		res, err := fetchUserFromRedis(username)
+		res, err := db.FetchUserCache(username)
 		if err != nil {
 			log.Println("User Cache Do Not Exist", err)
-			res, err = fetchUserFromMongo(username)
+			res, err = db.FetchUserFromMongo(username)
 			if err != nil {
 				log.Println("fetchUserFromMongo", err)
 			}
@@ -45,12 +43,11 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 
 		// Wrong passwork in cache, fetch user from mongo
 		log.Println(username, "Wrong passwork in cache, fetch user from mongo")
-		res, err = fetchUserFromMongo(username)
+		res, err = db.FetchUserFromMongo(username)
 		isOK = CheckPasswordHash(password, res.Password)
 
 		if isOK {
-			cache, _ := msgpack.Marshal(&res)
-			db.RedisClient.Set(res.Username, cache, 0)
+			db.LoadUserCache(res)
 			return res.Username, true
 		}
 
@@ -58,11 +55,11 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 	},
 	Authorizator: func(username string, c *gin.Context) bool {
 
-		res, err := fetchUserFromRedis(username)
+		res, err := db.FetchUserCache(username)
 
 		if err != nil {
 			log.Println("User Cache Do Not Exist", err)
-			res, err = fetchUserFromMongo(username)
+			res, err = db.FetchUserFromMongo(username)
 			if err != nil {
 				log.Println("fetchUserFromMongo", err)
 			}
@@ -109,31 +106,4 @@ func CheckPasswordHash(password, hash string) bool {
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
-}
-
-func fetchUserFromMongo(username string) (user t.User, err error) {
-	var p = bson.M{}
-	var res = t.User{}
-
-	p["username"] = username
-	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&res)
-	if err != nil || res.Username == "" {
-		log.Println("GetUser: ", err)
-		return res, err
-	}
-	return res, nil
-}
-
-func fetchUserFromRedis(username string) (user t.User, err error) {
-
-	var res = t.User{}
-
-	resp, _ := db.RedisClient.Get(username).Bytes()
-	err = msgpack.Unmarshal(resp, &res)
-	if err != nil {
-		log.Println("GetUser: ", err)
-		return res, err
-	}
-
-	return res, nil
 }

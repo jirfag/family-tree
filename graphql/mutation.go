@@ -8,10 +8,27 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 	Name:        "RootMutation",
 	Description: "Root Mutation",
 	Fields: graphql.Fields{
-		"addGroup":   &addGroup,
-		"updateUser": &updateUser,
+		"addGroup":    &addGroup,
+		"addCompany":  &addCompany,
+		"updateUser":  &updateUser,
+		"updateGroup": &updateGroup,
 	},
 })
+
+var addCompany = graphql.Field{
+	Name:        "Company",
+	Description: "Add Company",
+	Type:        graphql.NewNonNull(groupType),
+	Args: graphql.FieldConfigArgument{
+		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
+		"startYear": &graphql.ArgumentConfig{Type: graphql.Int},
+		"endYear":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"memberIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+	},
+	Resolve: AddCompany,
+}
 
 var addGroup = graphql.Field{
 	Name:        "Group",
@@ -33,14 +50,20 @@ var updateGroup = graphql.Field{
 	Description: "Update group",
 	Type:        graphql.NewNonNull(groupType),
 	Args: graphql.FieldConfigArgument{
-		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
-		"startYear": &graphql.ArgumentConfig{Type: graphql.Int},
-		"endYear":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"id":          &graphql.ArgumentConfig{Type: graphql.Int},
+		"groupName":   &graphql.ArgumentConfig{Type: graphql.String},
+		"startYear":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"endYear":     &graphql.ArgumentConfig{Type: graphql.Int},
+		"fromGroupID": &graphql.ArgumentConfig{Type: graphql.Int},
+		"toGroupID":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"leaderIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
 		"memberIDs": &graphql.ArgumentConfig{
 			Type: graphql.NewList(graphql.Int),
 		},
 	},
-	Resolve: AddGroup,
+	Resolve: UpdateGroup,
 }
 
 var updateUser = graphql.Field{
