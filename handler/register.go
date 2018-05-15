@@ -17,7 +17,7 @@ import (
 )
 
 // RegisterHandler is a func to handler register request
-func RegisterHandler(c *gin.Context) {
+func GenCode(c *gin.Context) {
 	var info register
 	c.BindJSON(&info)
 
@@ -71,7 +71,7 @@ func RegisterHandler(c *gin.Context) {
 }
 
 // VerifyCodeHandler is a func to verify sms code
-func VerifyCodeHandler(c *gin.Context) {
+func RegisterHandler(c *gin.Context) {
 	var data register
 	var info register
 	c.BindJSON(&data)

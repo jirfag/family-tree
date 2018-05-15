@@ -2,5 +2,6 @@
 *tmp
 scripts/
 family-tree
+vendor
 config.yml
 config.deploy.yml
