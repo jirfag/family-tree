@@ -8,7 +8,7 @@ import (
 
 func SendSMS(Phone, Template, Dict string) (isOK bool, msg string, errID string) {
 	dysms.HTTPDebugEnable = true
-	dysms.SetACLClient(AppConfig.Dayu.AccessID, AppConfig.Dayu.AccessKey) // dysms.New(ACCESSID, ACCESSKEY)
+	dysms.SetACLClient(AppConfig.Dayu.AccessID, AppConfig.Dayu.AccessKey)
 
 	// send to some one
 	respSendSms, err := dysms.SendSms(uuid.New(), Phone, "联创团队", Template, Dict).DoActionWithException()

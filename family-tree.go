@@ -6,8 +6,12 @@ import (
 	"family-tree/middleware"
 	"family-tree/utils"
 	"fmt"
+	"github.com/Salvatore-Giordano/gin-redis-ip-limiter"
+	"github.com/ekyoung/gin-nice-recovery"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -15,6 +19,16 @@ func main() {
 
 	// CORS support
 	r.Use(middleware.CORSMiddleware())
+
+	// recovery from internal server error
+	r.Use(nice.Recovery(utils.RecoveryHandler))
+
+	// limit request frequency per minute
+	r.Use(iplimiter.NewRateLimiterMiddleware(redis.NewClient(&redis.Options{
+		Addr:     utils.AppConfig.Redis.Host + ":" + utils.AppConfig.Redis.Port,
+		Password: utils.AppConfig.Redis.Password,
+		DB:       utils.AppConfig.Redis.DB,
+	}), "general", 200, time.Minute))
 
 	// AUTH & Login
 	r.POST("/login", middleware.AuthMiddleware.LoginHandler)
