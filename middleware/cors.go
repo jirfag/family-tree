@@ -2,10 +2,11 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"os"
 	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 var CORSConfig = loadConfig()
@@ -35,7 +36,13 @@ func loadConfig() cors.Config {
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// TODO uncomment when release
+		//if os.Getenv("GIN_MODE") == "release" {
+		//	c.Writer.Header().Set("Access-Control-Allow-Origin", "https://fmt.fredliang.cn")
+		//} else {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		//}
+
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET")

@@ -85,6 +85,7 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 	// - "header:<name>"
 	// - "query:<name>"
 	// - "cookie:<name>"
+
 	TokenLookup: "header:Authorization",
 	// TokenLookup: "query:token",
 	// TokenLookup: "cookie:token",

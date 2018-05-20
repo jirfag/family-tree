@@ -5,3 +5,4 @@ family-tree
 vendor
 config.yml
 config.deploy.yml
+*.log

@@ -13,11 +13,12 @@ type User struct {
 	Phone            string    `bson:"phone" json:"phone"`
 	Avatar           string    `bson:"avatar" json:"avatar"`
 	Wechat           string    `bson:"wechat" json:"wechat"`
-	Loaction         string    `bson:"location" json:"location"`
+	Location         string    `bson:"location" json:"location"`
 	InviteCode       string    `bson:"inviteCode" json:"inviteCode"`
-	CreatedTime      time.Time `bson:"createdTime" json:"createdTime"`
+	CreatedTime      time.Time `bson:"createdTime" json:"createdTime"` // Created time
 	IsGraduated      bool      `bson:"isGraduated" json:"isGraduated"`
-	IsActivated      bool      `bson:"isActivated" json:"isActivated"`
+	IsActivated      bool      `bson:"isActivated" json:"isActivated"` // Account was activated via verify code
+	IsValidated      bool      `bson:"isValidated" json:"isValidated"` // Account was validated by admin
 	IsBasicCompleted bool      `bson:"isBasicCompleted" json:"isBasicCompleted"`
 	IsAdmin          bool      `bson:"isAdmin" json:"isAdmin"`
 	Abilities        []string  `bson:"abilities" json:"abilities"`

@@ -44,6 +44,7 @@ func GenCode(c *gin.Context) {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": err})
 		return
 	}
+
 	info.Password, err = middleware.HashPassword(info.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -70,7 +71,7 @@ func GenCode(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
-// VerifyCodeHandler is a func to verify sms code
+// RegisterHandler is a func to verify sms code
 func RegisterHandler(c *gin.Context) {
 	var data register
 	var info register

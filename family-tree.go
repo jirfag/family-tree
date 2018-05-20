@@ -1,20 +1,28 @@
 package main
 
 import (
+	"family-tree/db"
 	"family-tree/graphql"
 	"family-tree/handler"
 	"family-tree/middleware"
 	"family-tree/utils"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/Salvatore-Giordano/gin-redis-ip-limiter"
 	"github.com/ekyoung/gin-nice-recovery"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis"
-	"net/http"
-	"time"
 )
 
 func main() {
+
+	// Logging to a file.
+	f, _ := os.Create("server.log")
+	gin.DefaultWriter = io.MultiWriter(f)
+
 	r := gin.Default()
 
 	// CORS support
@@ -24,18 +32,19 @@ func main() {
 	r.Use(nice.Recovery(utils.RecoveryHandler))
 
 	// limit request frequency per minute
-	r.Use(iplimiter.NewRateLimiterMiddleware(redis.NewClient(&redis.Options{
-		Addr:     utils.AppConfig.Redis.Host + ":" + utils.AppConfig.Redis.Port,
-		Password: utils.AppConfig.Redis.Password,
-		DB:       utils.AppConfig.Redis.DB,
-	}), "general", 200, time.Minute))
+	r.Use(iplimiter.NewRateLimiterMiddleware(db.RedisClient, "general", 200, time.Minute))
 
 	// AUTH & Login
 	r.POST("/login", middleware.AuthMiddleware.LoginHandler)
-	r.POST("/code", handler.GenCode)
-	r.POST("/register", handler.RegisterHandler)
 
-	// Healthcheck
+	r.POST("/code", handler.GenCode)
+	r.POST("/register_code", handler.GenCode)
+	r.POST("/reset_password_code", handler.GenResetCode)
+
+	r.POST("/register", handler.RegisterHandler)
+	r.POST("/reset", handler.ResetPassword)
+
+	// HealthCheck
 	r.GET("/ping", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "pong", "code": 200}) })
 
 	// Main Handler
@@ -55,8 +64,9 @@ func main() {
 }
 
 func showStatus() {
-	fmt.Println("\n===================================" +
-		"\nAPP         : " + utils.AppConfig.APPName +
-		"\nRunning On  : HTTP      " + utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port +
-		"\n===================================")
+	fmt.Println(
+		"\n===================================" +
+			"\nAPP         : " + utils.AppConfig.APPName +
+			"\nRunning On  : HTTP      " + utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port +
+			"\n===================================")
 }

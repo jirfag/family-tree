@@ -20,10 +20,22 @@
   revision = "ea0e875f90303d1469067f22ccda69f903380a87"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/Salvatore-Giordano/gin-redis-ip-limiter"
+  packages = ["."]
+  revision = "409a923d7aa887812393e6c45acfc2b21a00c8e3"
+
+[[projects]]
   name = "github.com/appleboy/gin-jwt"
   packages = ["."]
   revision = "f7347d7c16fc8297bf5b7215b9e4847a5ca05d90"
   version = "v2.3.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/ekyoung/gin-nice-recovery"
+  packages = ["."]
+  revision = "1654dca486db940bf0c76b0562328f40a898504e"
 
 [[projects]]
   name = "github.com/gin-contrib/cors"
@@ -46,6 +58,12 @@
   ]
   revision = "d459835d2b077e44f7c9b453505ee29881d5d12d"
   version = "v1.2"
+
+[[projects]]
+  name = "github.com/go-errors/errors"
+  packages = ["."]
+  revision = "a6af135bd4e28680facf08a3d206b454abc877a4"
+  version = "v1.0.1"
 
 [[projects]]
   name = "github.com/go-redis/redis"
@@ -128,8 +146,8 @@
     ".",
     "codes"
   ]
-  revision = "a053f3dac71df214bfe8b367f34220f0029c9c02"
-  version = "v3.3.1"
+  revision = "6ab02c0ddf38d837488a746aa8709f6ecffc2fde"
+  version = "v3.3.2"
 
 [[projects]]
   branch = "master"
@@ -138,7 +156,7 @@
     "bcrypt",
     "blowfish"
   ]
-  revision = "034e5325b6ab92faa14d15c30e86919e911cf8e0"
+  revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
 
 [[projects]]
   branch = "master"
@@ -196,7 +214,7 @@
   branch = "v2"
   name = "gopkg.in/validator.v2"
   packages = ["."]
-  revision = "59c90c7046f643cbe0d4e7c8776c42a84ce75910"
+  revision = "135c24b11c19e52befcae2ec3fca5d9b78c4e98e"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
@@ -207,6 +225,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "49a2f2a566b123f19afefaeca2548b60f0d829584af63bee6046f885130197d5"
+  inputs-digest = "619eaf9b3e21bd774c975a76a383c643a5d2468b819c18ecb0d5d17c10c6e9a7"
   solver-name = "gps-cdcl"
   solver-version = 1
