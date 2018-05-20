@@ -8,7 +8,6 @@ import (
 	"family-tree/utils"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"time"
 
@@ -45,7 +44,7 @@ func main() {
 	r.POST("/reset", handler.ResetPassword)
 
 	// HealthCheck
-	r.GET("/ping", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "pong", "code": 200}) })
+	r.GET("/ping", handler.HealthCheck)
 
 	// Main Handler
 	auth := r.Group("/")

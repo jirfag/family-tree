@@ -7,16 +7,15 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	ai "github.com/night-codes/mgo-ai"
+	"github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2/bson"
-	validator "gopkg.in/validator.v2"
+	"gopkg.in/validator.v2"
 )
 
-// RegisterHandler is a func to handler register request
+// GenCode is a func to gen request code
 func GenCode(c *gin.Context) {
 	var info register
 	c.BindJSON(&info)
@@ -52,7 +51,7 @@ func GenCode(c *gin.Context) {
 	}
 
 	// send sms
-	if os.Getenv("GIN_MODE") == "release" {
+	if gin.Mode() == "release" {
 		isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.InviteCode+`"}`)
 		if !isOK {
 			c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
@@ -81,7 +80,7 @@ func RegisterHandler(c *gin.Context) {
 	fmt.Println("info.Username:", info.Username)
 
 	if info.Username == "" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "No such user"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "No such user", "code": http.StatusNotFound})
 		return
 	}
 
@@ -91,17 +90,17 @@ func RegisterHandler(c *gin.Context) {
 	}
 
 	if info.IsActivated == true {
-		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Already Verifyed"})
+		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Already Verifyed", "code": http.StatusOK})
 		return
 	}
 
 	if info.InviteCode == data.InviteCode {
 		info.IsActivated = true
 		db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": data.Username}, &info)
-		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Verifyed"})
+		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Verifyed", "code": http.StatusOK})
 		return
 	} else {
-		c.JSON(http.StatusForbidden, gin.H{"message": "Wrong Verify Code"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "Wrong Verify Code", "code": http.StatusForbidden})
 		return
 	}
 

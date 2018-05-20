@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/configor"
 )
 
@@ -48,14 +49,19 @@ type Config struct {
 // LoadConfiguration is a function to load cfg from file
 func LoadConfiguration() Config {
 	path, err := os.Getwd()
+
 	if err != nil {
 		log.Fatalf("[loadAppConfig]: %s\n", err)
 	}
 
-	if os.Getenv("GIN_MODE") == "release" {
+	switch gin.Mode() {
+	case "release":
 		path = strings.Replace(path, "test", "", -1) + "/config.deploy.yml"
-	} else {
-		path = strings.Replace(path, "test", "", -1) + "/config.yml"
+	case "debug":
+		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.yml"
+	case "test":
+		slice := strings.Split(path, "/")
+		path = strings.Join(slice[:len(slice)-1], "/") + "/config.yml"
 	}
 
 	var config Config

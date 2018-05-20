@@ -97,6 +97,7 @@ type User {
 	createdTime: String # 2018-05-06 18:49:48.032 +0800 CST
 	isGraduate: Boolean
 	isActivated: Boolean
+	isValidated: Boolean
 	isBasicCompleted: Boolean
 	isAdmin: Boolean
 	abilities: [String]
