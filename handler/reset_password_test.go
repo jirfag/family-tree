@@ -24,7 +24,39 @@ func TestGenResetCode(t *testing.T) {
 
 func TestResetPassword(t *testing.T) {
 	r := gofight.New()
-
+	r.POST("/reset").
+		SetDebug(true).
+		SetJSON(gofight.D{
+			"username":   "123",
+			"password":   utils.AppConfig.Root.Password,
+			"verifyCode": "331",
+		}).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.JSONEq(t, `{"code":400,"message":"Error occur when fetching user"}`, r.Body.String())
+			assert.Equal(t, http.StatusBadRequest, r.Code)
+		})
+	r.POST("/reset").
+		SetDebug(true).
+		SetJSON(gofight.D{
+			"username":   utils.AppConfig.Root.Username,
+			"password":   utils.AppConfig.Root.Password,
+			"verifyCode": "",
+		}).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.JSONEq(t, `{"code":406, "message":"Missing parameter"}`, r.Body.String())
+			assert.Equal(t, http.StatusNotAcceptable, r.Code)
+		})
+	r.POST("/reset").
+		SetDebug(true).
+		SetJSON(gofight.D{
+			"username":   utils.AppConfig.Root.Username,
+			"password":   utils.AppConfig.Root.Password,
+			"verifyCode": "233",
+		}).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.JSONEq(t, `{"code":417, "message":"Wrong code"}`, r.Body.String())
+			assert.Equal(t, http.StatusExpectationFailed, r.Code)
+		})
 	r.POST("/reset").
 		SetDebug(true).
 		SetJSON(gofight.D{

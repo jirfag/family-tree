@@ -17,17 +17,16 @@ import (
 )
 
 func main() {
-
-	// Logging to a file.
-	f, _ := os.Create("server.log")
-	gin.DefaultWriter = io.MultiWriter(f)
-
 	r := gin.Default()
 
 	// CORS support
 	r.Use(middleware.CORSMiddleware())
 
-	if gin.Mode() == "debug" {
+	if gin.Mode() == "release" {
+		// Logging to a file.
+		f, _ := os.Create("server.log")
+		gin.DefaultWriter = io.MultiWriter(f)
+
 		// recovery from internal server error
 		r.Use(nice.Recovery(utils.RecoveryHandler))
 

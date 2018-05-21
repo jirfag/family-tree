@@ -17,7 +17,7 @@ func InitDB(c *gin.Context) {
 	user := t.User{
 		ID:          ai.Next("user"),
 		Username:    utils.AppConfig.Root.Username,
-		IsActivated: true,
+		IsActivated: false,
 		IsAdmin:     true,
 		VerifyCode:  "2333",
 		CreatedTime: time.Now(),

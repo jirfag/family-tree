@@ -56,6 +56,7 @@ func ResetPassword(c *gin.Context) {
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": info.Username}).One(&data)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Error occur when fetching user", "code": http.StatusBadRequest})
+		return
 	}
 	if info.VerifyCode != data.VerifyCode {
 		c.JSON(http.StatusExpectationFailed, gin.H{"message": "Wrong code", "code": http.StatusExpectationFailed})
@@ -72,6 +73,7 @@ func ResetPassword(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Error occur when fetching user", "code": http.StatusBadRequest})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "OK", "code": http.StatusOK})

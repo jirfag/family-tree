@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"family-tree/db"
 	"family-tree/middleware"
 	"family-tree/utils"
@@ -22,13 +23,12 @@ func GenCode(c *gin.Context) {
 
 	count, err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": info.Username}).Count()
 	if count != 0 {
-		c.JSON(http.StatusConflict, gin.H{"msg": "Username exists."})
+		err = errors.New("Username exists.")
+	}
+
+	if err != nil {
+		c.JSON(http.StatusConflict, gin.H{"msg": fmt.Sprintln(err), "code": http.StatusConflict})
 		return
-	} else {
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"msg": err})
-			return
-		}
 	}
 
 	// log CreatedTime
@@ -77,7 +77,6 @@ func RegisterHandler(c *gin.Context) {
 	c.BindJSON(&data)
 
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": data.Username}).One(&info)
-	fmt.Println("info.Username:", info.Username)
 
 	if info.Username == "" {
 		c.JSON(http.StatusNotFound, gin.H{"message": "No such user", "code": http.StatusNotFound})
@@ -89,10 +88,12 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	if info.IsActivated == true {
+	if info.IsActivated == true && info.VerifyCode == data.VerifyCode {
 		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Already Verifyed", "code": http.StatusOK})
 		return
 	}
+
+	fmt.Println("info.VerifyCode: ", info.VerifyCode, "data.VerifyCode: ", data.VerifyCode)
 
 	if info.VerifyCode == data.VerifyCode {
 		info.IsActivated = true

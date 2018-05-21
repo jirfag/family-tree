@@ -1,5 +1,7 @@
 # Family Tree Backend
 
+[![Build Status](https://travis-ci.org/fredliang44/family-tree.svg?branch=master)](https://travis-ci.org/fredliang44/family-tree)[![codecov](https://codecov.io/gh/fredliang44/family-tree/branch/master/graph/badge.svg)](https://codecov.io/gh/fredliang44/family-tree)
+
 ## 1. Docs
 
 Request|Document

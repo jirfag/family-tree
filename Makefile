@@ -10,6 +10,9 @@ example:
 test: example
 	go test -v -cover ./handler
 
+cov:
+	go test -race ./handler -coverprofile=coverage.txt -covermode=atomic
+
 docker_test: clean
 	docker run --rm \
 		-v $(PWD):$(PROJECT_PATH) \

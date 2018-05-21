@@ -68,7 +68,7 @@ func LoadConfiguration() Config {
 	configFile, err := os.Open(path)
 	defer configFile.Close()
 	if err != nil {
-		log.Println("[loadAppConfig]: %s\n", err)
+		log.Printf("[loadAppConfig]: %s\n", err)
 	}
 
 	configor.Load(&config, path)
@@ -89,8 +89,6 @@ func LoadConfiguration() Config {
 		config.Root.Username = os.Getenv("ROOT_USERNAME")
 		config.Root.Password = os.Getenv("ROOT_PASSWORD")
 	}
-
-	fmt.Print(config)
 
 	return config
 }
