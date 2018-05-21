@@ -27,12 +27,13 @@ func main() {
 	// CORS support
 	r.Use(middleware.CORSMiddleware())
 
-	// recovery from internal server error
-	r.Use(nice.Recovery(utils.RecoveryHandler))
+	if gin.Mode() == "debug" {
+		// recovery from internal server error
+		r.Use(nice.Recovery(utils.RecoveryHandler))
 
-	// limit request frequency per minute
-	r.Use(iplimiter.NewRateLimiterMiddleware(db.RedisClient, "general", 200, time.Minute))
-
+		// limit request frequency per minute
+		r.Use(iplimiter.NewRateLimiterMiddleware(db.RedisClient, "general", 200, time.Minute))
+	}
 	// AUTH & Login
 	r.POST("/login", middleware.AuthMiddleware.LoginHandler)
 

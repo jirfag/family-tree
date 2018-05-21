@@ -34,9 +34,9 @@ func GenCode(c *gin.Context) {
 	// log CreatedTime
 	info.CreatedTime = time.Now()
 
-	// gen InviteCode
+	// gen verifyCode
 	rand.Seed(time.Now().Unix())
-	info.InviteCode = fmt.Sprintf("%04d", rand.Intn(10000))
+	info.VerifyCode = fmt.Sprintf("%04d", rand.Intn(10000))
 
 	// handle password
 	if err := validator.Validate(info); err != nil {
@@ -52,7 +52,7 @@ func GenCode(c *gin.Context) {
 
 	// send sms
 	if gin.Mode() == "release" {
-		isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.InviteCode+`"}`)
+		isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.VerifyCode+`"}`)
 		if !isOK {
 			c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
 			return
@@ -94,7 +94,7 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	if info.InviteCode == data.InviteCode {
+	if info.VerifyCode == data.VerifyCode {
 		info.IsActivated = true
 		db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": data.Username}, &info)
 		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Verifyed", "code": http.StatusOK})
@@ -111,7 +111,7 @@ type register struct {
 	Username    string    `validate:"min=3,max=20" bson:"username" json:"username"`
 	Password    string    `validate:"min=3,max=30,regexp=^((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[a-z]).*$" bson:"password" json:"password"`
 	Phone       string    `validate:"len=11,regexp=^1[34578]\d{9}$" bson:"phone" json:"phone"`
-	InviteCode  string    `bson:"inviteCode" json:"inviteCode"`
+	VerifyCode  string    `bson:"verifyCode" json:"verifyCode"`
 	IsActivated bool      `bson:"isActivated" json:"isActivated"`
 	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`
 }

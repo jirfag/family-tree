@@ -8,35 +8,32 @@ import (
 	"testing"
 )
 
-func TestGenCode(t *testing.T) {
+func TestGenResetCode(t *testing.T) {
 	r := gofight.New()
-	r.POST("/register_code").
+
+	r.POST("/reset_password_code").
 		SetDebug(true).
 		SetJSON(gofight.D{
 			"username": "test_family_tree",
-			"password": "test",
-			"phone":    "17777766666",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, "{\"message\":\"OK\"}", r.Body.String())
+			assert.JSONEq(t, "{\"code\":200, \"message\":\"OK\"}", r.Body.String())
 			assert.Equal(t, http.StatusOK, r.Code)
 		})
 }
 
-func TestRegister(t *testing.T) {
+func TestResetPassword(t *testing.T) {
 	r := gofight.New()
 
-	resp_list := []string{"{\"code\":200,\"message\":\"OK\",\"status\":\"Already Verifyed\"}",
-		"{\"code\":200,\"message\":\"OK\",\"status\":\"Verifyed\"}"}
-
-	r.POST("/register").
+	r.POST("/reset").
 		SetDebug(true).
 		SetJSON(gofight.D{
-			"username": utils.AppConfig.Root.Username,
-			"password": "2333",
+			"username":   utils.AppConfig.Root.Username,
+			"password":   utils.AppConfig.Root.Password,
+			"verifyCode": "2333",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.Contains(t, resp_list, r.Body.String())
+			assert.JSONEq(t, "{\"code\":200, \"message\":\"OK\"}", r.Body.String())
 			assert.Equal(t, http.StatusOK, r.Code)
 		})
 }

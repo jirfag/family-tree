@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -20,12 +21,11 @@ type Config struct {
 	}
 
 	Mongo struct {
-		Host      string `default:"127.0.0.1"`
-		Port      string `default:"27017"`
-		SecretKey string `default:"SecretKey"`
-		DB        string `default:"db"`
-		Username  string `default:"username"`
-		Password  string `default:"password"`
+		Host     string `default:"127.0.0.1"`
+		Port     string `default:"27017"`
+		DB       string `default:"db"`
+		Username string `default:"username"`
+		Password string `default:"password"`
 	}
 
 	Dayu struct {
@@ -60,15 +60,15 @@ func LoadConfiguration() Config {
 	case "debug":
 		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.yml"
 	case "test":
-		slice := strings.Split(path, "/")
-		path = strings.Join(slice[:len(slice)-1], "/") + "/config.yml"
+		fmt.Println("Start test", gin.Mode())
+		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.yml"
 	}
 
 	var config Config
 	configFile, err := os.Open(path)
 	defer configFile.Close()
 	if err != nil {
-		log.Fatalf("[loadAppConfig]: %s\n", err)
+		log.Println("[loadAppConfig]: %s\n", err)
 	}
 
 	configor.Load(&config, path)
@@ -79,6 +79,19 @@ func LoadConfiguration() Config {
 	} else {
 		config.Server.SecretKey = string([]byte(config.Server.SecretKey)[:32])
 	}
+
+	if gin.Mode() == "test" {
+		config.Mongo.Host = os.Getenv("MONGO_HOST")
+		config.Mongo.Port = os.Getenv("MONGO_PORT")
+		config.Mongo.Username = os.Getenv("MONGO_USERNAME")
+		config.Mongo.Password = os.Getenv("MONGO_PASSWORD")
+		config.Mongo.DB = os.Getenv("MONGO_DB")
+		config.Root.Username = os.Getenv("ROOT_USERNAME")
+		config.Root.Password = os.Getenv("ROOT_PASSWORD")
+	}
+
+	fmt.Print(config)
+
 	return config
 }
 

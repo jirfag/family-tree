@@ -300,9 +300,9 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 		if isOK {
 			p["loaction"] = loaction
 		}
-		inviteCode, isOK := params.Args["inviteCode"].(string)
+		verifyCode, isOK := params.Args["verifyCode"].(string)
 		if isOK {
-			p["inviteCode"] = inviteCode
+			p["verifyCode"] = verifyCode
 		}
 
 		isGraduate, isOK := params.Args["isGraduate"].(bool)

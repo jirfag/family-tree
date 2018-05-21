@@ -17,7 +17,7 @@ var userType = graphql.NewObject(graphql.ObjectConfig{
 		"avatar":           &graphql.Field{Type: graphql.String},
 		"wechat":           &graphql.Field{Type: graphql.String},
 		"location":         &graphql.Field{Type: graphql.String},
-		"inviteCode":       &graphql.Field{Type: graphql.String},
+		"verifyCode":       &graphql.Field{Type: graphql.String},
 		"createdTime":      &graphql.Field{Type: graphql.String},
 		"isGraduate":       &graphql.Field{Type: graphql.Boolean},
 		"IsActivated":      &graphql.Field{Type: graphql.Boolean},

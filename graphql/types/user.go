@@ -14,7 +14,7 @@ type User struct {
 	Avatar           string    `bson:"avatar" json:"avatar"`
 	Wechat           string    `bson:"wechat" json:"wechat"`
 	Location         string    `bson:"location" json:"location"`
-	InviteCode       string    `bson:"inviteCode" json:"inviteCode"`
+	VerifyCode       string    `bson:"verifyCode" json:"verifyCode"`
 	CreatedTime      time.Time `bson:"createdTime" json:"createdTime"` // Created time
 	IsGraduated      bool      `bson:"isGraduated" json:"isGraduated"`
 	IsActivated      bool      `bson:"isActivated" json:"isActivated"` // Account was activated via verify code

@@ -10,7 +10,6 @@ import (
 
 func TestInitDB(t *testing.T) {
 	r := gofight.New()
-
 	r.GET("/init_db").
 		SetDebug(true).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {

@@ -5,21 +5,21 @@ import (
 	t "family-tree/graphql/types"
 	m "family-tree/middleware"
 	"family-tree/utils"
+	"github.com/gin-gonic/gin"
+	"github.com/night-codes/mgo-ai"
 	"net/http"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 func InitDB(c *gin.Context) {
 	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").RemoveAll(nil)
 
 	user := t.User{
-		ID:          1,
+		ID:          ai.Next("user"),
 		Username:    utils.AppConfig.Root.Username,
 		IsActivated: true,
 		IsAdmin:     true,
-		InviteCode:  "2333",
+		VerifyCode:  "2333",
 		CreatedTime: time.Now(),
 	}
 

@@ -80,7 +80,7 @@ var updateUser = graphql.Field{
 		"avatar":           &graphql.ArgumentConfig{Type: graphql.String},
 		"wechat":           &graphql.ArgumentConfig{Type: graphql.String},
 		"loaction":         &graphql.ArgumentConfig{Type: graphql.String},
-		"inviteCode":       &graphql.ArgumentConfig{Type: graphql.String},
+		"verifyCode":       &graphql.ArgumentConfig{Type: graphql.String},
 		"createdTime":      &graphql.ArgumentConfig{Type: graphql.String},
 		"isGraduate":       &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"IsActivated":      &graphql.ArgumentConfig{Type: graphql.Boolean},
