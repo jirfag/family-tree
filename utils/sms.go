@@ -3,10 +3,17 @@ package utils
 import (
 	"fmt"
 	"github.com/GiterLab/aliyun-sms-go-sdk/dysms"
+	"github.com/gin-gonic/gin"
 	"github.com/tobyzxj/uuid"
 )
 
 func SendSMS(Phone, Template, Dict string) (isOK bool, msg string, errID string) {
+	if gin.Mode() == "test" {
+		if Phone == "17777766667" || Phone == "" {
+			return false, "Testing err sms", ""
+		}
+		return true, "Done", ""
+	}
 	dysms.HTTPDebugEnable = true
 	dysms.SetACLClient(AppConfig.Dayu.AccessID, AppConfig.Dayu.AccessKey)
 

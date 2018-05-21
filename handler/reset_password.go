@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"family-tree/db"
 	"family-tree/middleware"
 	"family-tree/utils"
@@ -17,24 +18,30 @@ import (
 // GenResetCode is a func to handler register request
 func GenResetCode(c *gin.Context) {
 	var info register
+	var data register
 	c.BindJSON(&info)
+
+	count, err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": info.Username}).Count()
+
+	if count == 0 {
+		err = errors.New("No Such User")
+	}
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintln(err)})
+		return
+	}
 
 	// update VerifyCode
 	rand.Seed(time.Now().Unix())
 	code := fmt.Sprintf("%04d", rand.Intn(10000))
-	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": info.Username}, bson.M{"$set": bson.M{"verifyCode": code}})
+	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": info.Username}, bson.M{"$set": bson.M{"verifyCode": code}})
+	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": info.Username}).One(&data)
 
 	// send sms
-	if gin.Mode() == "release" {
-		isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+code+`"}`)
-		if !isOK {
-			c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
-			return
-		}
-	}
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
+	isOK, msg, errID := utils.SendSMS(data.Phone, "SMS_133979618", `{"code":"`+code+`"}`)
+	if !isOK {
+		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
 		return
 	}
 
@@ -58,6 +65,7 @@ func ResetPassword(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Error occur when fetching user", "code": http.StatusBadRequest})
 		return
 	}
+
 	if info.VerifyCode != data.VerifyCode {
 		c.JSON(http.StatusExpectationFailed, gin.H{"message": "Wrong code", "code": http.StatusExpectationFailed})
 		return
@@ -65,16 +73,11 @@ func ResetPassword(c *gin.Context) {
 
 	// Update password
 	hashedPassword, _ := middleware.HashPassword(info.Password)
-	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(
+	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(
 		bson.M{"username": info.Username},
 		bson.M{"$set": bson.M{
 			"password": hashedPassword}},
 	)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Error occur when fetching user", "code": http.StatusBadRequest})
-		return
-	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "OK", "code": http.StatusOK})
 }

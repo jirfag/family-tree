@@ -11,6 +11,20 @@ import (
 
 func TestGenCode(t *testing.T) {
 	r := gofight.New()
+
+	// check err sending code
+	r.POST("/register_code").
+		SetDebug(true).
+		SetJSON(gofight.D{
+			"username": "test_err_sms",
+			"password": "test",
+			"phone":    "17777766667",
+		}).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.JSONEq(t, `{"err_id":"", "message":"Testing err sms"}`, r.Body.String())
+			assert.Equal(t, http.StatusBadRequest, r.Code)
+		})
+
 	r.POST("/register_code").
 		SetDebug(true).
 		SetJSON(gofight.D{

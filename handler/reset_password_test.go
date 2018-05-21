@@ -11,6 +11,17 @@ import (
 func TestGenResetCode(t *testing.T) {
 	r := gofight.New()
 
+	// check err sending code
+	r.POST("/reset_password_code").
+		SetDebug(true).
+		SetJSON(gofight.D{
+			"username": "test_err_sms1",
+		}).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.JSONEq(t, `{"err_id":"", "message":"Testing err sms"}`, r.Body.String())
+			assert.Equal(t, http.StatusBadRequest, r.Code)
+		})
+
 	r.POST("/reset_password_code").
 		SetDebug(true).
 		SetJSON(gofight.D{
@@ -19,6 +30,15 @@ func TestGenResetCode(t *testing.T) {
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 			assert.JSONEq(t, "{\"code\":200, \"message\":\"OK\"}", r.Body.String())
 			assert.Equal(t, http.StatusOK, r.Code)
+		})
+	r.POST("/reset_password_code").
+		SetDebug(true).
+		SetJSON(gofight.D{
+			"username": "test_fasdaamily_tree",
+		}).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.JSONEq(t, `{"msg":"No Such User\n"}`, r.Body.String())
+			assert.Equal(t, http.StatusBadRequest, r.Code)
 		})
 }
 

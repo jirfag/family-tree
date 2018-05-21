@@ -44,28 +44,18 @@ func GenCode(c *gin.Context) {
 		return
 	}
 
-	info.Password, err = middleware.HashPassword(info.Password)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
-		return
-	}
+	info.Password, _ = middleware.HashPassword(info.Password)
 
 	// send sms
-	if gin.Mode() == "release" {
-		isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.VerifyCode+`"}`)
-		if !isOK {
-			c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
-			return
-		}
+	isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.VerifyCode+`"}`)
+	if !isOK {
+		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
+		return
 	}
 
 	// save user info
 	info.ID = ai.Next("user")
-	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
-		return
-	}
+	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
 
 	c.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
@@ -76,15 +66,10 @@ func RegisterHandler(c *gin.Context) {
 	var info register
 	c.BindJSON(&data)
 
-	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": data.Username}).One(&info)
+	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": data.Username}).One(&info)
 
 	if info.Username == "" {
 		c.JSON(http.StatusNotFound, gin.H{"message": "No such user", "code": http.StatusNotFound})
-		return
-	}
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 
