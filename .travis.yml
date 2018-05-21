@@ -16,12 +16,15 @@ cache:
     - $HOME/gopath/src/
 
 before_install:
+  - rm -rf $HOME/gopath/src/family-tree
   - mv $HOME/gopath/src/github.com/fredliang44/family-tree $HOME/gopath/src/
   - cd $HOME/gopath/src/family-tree
 
+#script:
+#  - go test -v -t ./handler
+#  - go test -race -coverprofile=coverage.txt -covermode=atomic
 script:
-  - go test -v -t ./handler
-  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - make test
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -f .cover/coverage.txt
