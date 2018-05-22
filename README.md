@@ -1,7 +1,9 @@
 # Family Tree Backend
 
-[![Build Status](https://travis-ci.org/fredliang44/family-tree.svg?branch=master)](https://travis-ci.org/fredliang44/family-tree) [![codecov](https://codecov.io/gh/fredliang44/family-tree/branch/master/graph/badge.svg)](https://codecov.io/gh/fredliang44/family-tree)
-
+[![Build Status](https://img.shields.io/travis/fredliang44/family-tree/master.svg?style=flat-square)](https://travis-ci.org/fredliang44/family-tree)
+[![Codecov](https://img.shields.io/codecov/c/github/fredliang44/family-tree.svg?style=flat-square)](https://codecov.io/gh/fredliang44/family-tree)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/fredliang44/family-tree)
+[![Go Report Card](https://goreportcard.com/badge/github.com/fredliang44/family-tree?style=flat-square)](https://goreportcard.com/report/github.com/fredliang44/family-tree)
 ## 1. Docs
 
 Request|Document

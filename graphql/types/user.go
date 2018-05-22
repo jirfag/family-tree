@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// User is a type to transform user data to database
 type User struct {
 	ID               uint64    `json:"id" bson:"_id,omitempty"`
 	Password         string    `bson:"password" json:"password"`

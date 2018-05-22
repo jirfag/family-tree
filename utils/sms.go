@@ -7,6 +7,7 @@ import (
 	"github.com/tobyzxj/uuid"
 )
 
+// SendSMS is a func to handle sms with dayu
 func SendSMS(Phone, Template, Dict string) (isOK bool, msg string, errID string) {
 	if gin.Mode() == "test" {
 		if Phone == "17777766667" || Phone == "" {

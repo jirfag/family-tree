@@ -23,7 +23,7 @@ func GenCode(c *gin.Context) {
 
 	count, err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": info.Username}).Count()
 	if count != 0 {
-		err = errors.New("Username exists.")
+		err = errors.New("Username exists")
 	}
 
 	if err != nil {
@@ -85,11 +85,8 @@ func RegisterHandler(c *gin.Context) {
 		db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": data.Username}, &info)
 		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Verifyed", "code": http.StatusOK})
 		return
-	} else {
-		c.JSON(http.StatusForbidden, gin.H{"message": "Wrong Verify Code", "code": http.StatusForbidden})
-		return
 	}
-
+	c.JSON(http.StatusForbidden, gin.H{"message": "Wrong Verify Code", "code": http.StatusForbidden})
 }
 
 type register struct {

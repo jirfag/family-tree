@@ -33,7 +33,7 @@ func TestGenCode(t *testing.T) {
 			"phone":    "17777766666",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, `{"code":409, "msg":"Username exists.\n"}`, r.Body.String())
+			assert.JSONEq(t, `{"code":409, "msg":"Username exists\n"}`, r.Body.String())
 			assert.Equal(t, http.StatusConflict, r.Code)
 		})
 

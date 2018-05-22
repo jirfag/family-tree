@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-// GetUser is a graphql resolver to get company info
+// GetCompany is a graphql resolver to get company info
 func GetCompany(params graphql.ResolveParams) (interface{}, error) {
 	var res []t.Company
 	var p = bson.M{}
@@ -68,7 +68,7 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 	return res, nil
 }
 
-// GetUser is a graphql resolver to get user info
+// GetGroup is a graphql resolver to get user info
 func GetGroup(params graphql.ResolveParams) (interface{}, error) {
 	var res []t.Group
 	var p = bson.M{}
@@ -243,7 +243,6 @@ func AddGroup(params graphql.ResolveParams) (interface{}, error) {
 
 // UpdateUser is a graphql resolver to update user info
 func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
-
 	var res t.User
 	var p = bson.M{}
 
@@ -428,7 +427,7 @@ func UpdateGroup(params graphql.ResolveParams) (interface{}, error) {
 
 }
 
-// UpdateGroup is a graphql resolver to update group info
+// UpdateCompany is a graphql resolver to update group info
 func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 
 	var res t.Company

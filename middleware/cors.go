@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CORSConfig is a middleware to handle CORS request (abandoned)
 var CORSConfig = loadConfig()
 
 func loadConfig() cors.Config {
@@ -33,6 +34,7 @@ func loadConfig() cors.Config {
 	return config
 }
 
+// CORSMiddleware is a func to handler CORS request
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// TODO uncomment when release
