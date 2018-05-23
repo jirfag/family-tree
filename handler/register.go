@@ -40,7 +40,7 @@ func GenCode(c *gin.Context) {
 
 	// handle password
 	if err := validator.Validate(info); err != nil {
-		c.JSON(http.StatusNotAcceptable, gin.H{"message": err})
+		c.JSON(http.StatusNotAcceptable, gin.H{"message": err, "code": http.StatusNotAcceptable})
 		return
 	}
 
@@ -60,7 +60,7 @@ func GenCode(c *gin.Context) {
 	info.ID = ai.Next("user")
 	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
 
-	c.JSON(http.StatusOK, gin.H{"message": "OK"})
+	c.JSON(http.StatusOK, gin.H{"message": "OK", "code": http.StatusOK})
 }
 
 // RegisterHandler is a func to verify sms code

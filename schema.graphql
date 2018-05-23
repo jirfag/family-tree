@@ -39,7 +39,7 @@ type Mutation {
 		endYear: Int!
 		fromGroupID: Int!
 		toGroupID: int!
-		userIDs: [Int]
+		memberIDs: [Int]
 	): Group
 	updateCompany(
 		name: String!
@@ -58,7 +58,7 @@ type Mutation {
 		leaderIDs: [Int]
 		fromGroupID: Int
 		toGroupIDs: [Int]
-		userIDs: [Int]
+		memberIDs: [Int]
 	): Group
 	updateUser(
 		id: Int!

@@ -45,7 +45,7 @@ func TestGenCode(t *testing.T) {
 			"phone":    "17777766666",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, "{\"message\":\"OK\"}", r.Body.String())
+			assert.JSONEq(t, `{"code":200, "message":"OK"}`, r.Body.String())
 			assert.Equal(t, http.StatusOK, r.Code)
 		})
 
