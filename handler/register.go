@@ -47,7 +47,10 @@ func GenCode(c *gin.Context) {
 	info.Password, _ = middleware.HashPassword(info.Password)
 
 	// send sms
-	isOK, msg, errID := utils.SendSMS(info.Phone, "SMS_133979618", `{"code":"`+info.VerifyCode+`"}`)
+	// Using tencent cloud
+	// isOK, msg, errID := utils.SendDYSMS(data.Phone, "SMS_133979618", `{"code":"`+code+`"}`) DAYU example
+	isOK, msg, errID := utils.SendQCSMS(info.Phone, 96385, []string{"Family Tree", info.VerifyCode})
+
 	if !isOK {
 		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
 		return

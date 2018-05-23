@@ -33,6 +33,7 @@ func main() {
 		// limit request frequency per minute
 		r.Use(iplimiter.NewRateLimiterMiddleware(db.RedisClient, "general", 200, time.Minute))
 	}
+
 	// AUTH & Login
 	r.POST("/login", middleware.AuthMiddleware.LoginHandler)
 

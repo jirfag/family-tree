@@ -31,6 +31,13 @@ type Config struct {
 	Dayu struct {
 		AccessID  string `required:"true"`
 		AccessKey string `required:"true"`
+		Sign      string `default:""`
+	}
+
+	QcloudSMS struct {
+		AppID  string `default:""`
+		AppKey string `default:""`
+		Sign   string `default:""`
 	}
 
 	Redis struct {

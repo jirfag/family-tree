@@ -32,6 +32,18 @@
   version = "v2.3.1"
 
 [[projects]]
+  name = "github.com/appleboy/gofight"
+  packages = ["."]
+  revision = "beadc315fb676177c07a89c34159b9ca4e1aafd9"
+  version = "v2.0.0"
+
+[[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
+  version = "v1.1.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/ekyoung/gin-nice-recovery"
   packages = ["."]
@@ -129,6 +141,24 @@
   revision = "437243fe1a702ae728edd510c4bfdcdde3bc227d"
 
 [[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/qichengzx/qcloudsms_go"
+  packages = ["."]
+  revision = "a8db5f9aa1d43589c1b5689ad4a4d4f551e49ce7"
+
+[[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
+  version = "v1.2.1"
+
+[[projects]]
   branch = "master"
   name = "github.com/tobyzxj/uuid"
   packages = ["."]
@@ -162,13 +192,13 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "2491c5de3490fced2f6cff376127c667efeed857"
+  revision = "9ef9f5bb98a1fdc41f8cf6c250a4404b4085e389"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
+  revision = "88eb85aaee56831ad49eaf7aa80d73de9814cde2"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -225,6 +255,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "619eaf9b3e21bd774c975a76a383c643a5d2468b819c18ecb0d5d17c10c6e9a7"
+  inputs-digest = "0731b6f917ffc618c49336a62825683551ccee9a619c888dad754a726293d218"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -21,4 +21,4 @@ docker_test: clean
 		sh -c "coverage all"
 
 clean:
-	rm -rf .cover
+	rm -rf coverage.txt

@@ -39,7 +39,10 @@ func GenResetCode(c *gin.Context) {
 	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": info.Username}).One(&data)
 
 	// send sms
-	isOK, msg, errID := utils.SendSMS(data.Phone, "SMS_133979618", `{"code":"`+code+`"}`)
+	// Using tencent cloud
+	// isOK, msg, errID := utils.SendDYSMS(data.Phone, "SMS_133979618", `{"code":"`+code+`"}`) DAYU example
+	isOK, msg, errID := utils.SendQCSMS(data.Phone, 96385, []string{"Family Tree", code})
+
 	if !isOK {
 		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
 		return
