@@ -25,38 +25,45 @@ Backend | <https://fmt.fredliang.cn>
 3. When deploying, mv `config.deploy.yml` to the same folder with your binary file you've built.
 
 ## 4. Project Structure
-
 ```shell
-tree ./
 ├── Dockerfile           // docker support
+├── Gopkg.lock
+├── Gopkg.toml
+├── Makefile
 ├── README.md
-├── config.deploy.yml    // deploy
-├── config.example.yml   // example
-├── config.yml           // develope config
+├── config.example.yml   // example config
 ├── db
 │   ├── mongo.go
 │   └── redis.go
-├── family-tree.go       // main function && router
-├── graphql              // handle graphql requests
+├── family-tree.go       // main func and router
+├── graphql
 │   ├── base.go
 │   ├── mutation.go
 │   ├── query.go
 │   ├── resolvers.go
 │   ├── schema.go
 │   ├── types
+│   │   ├── company.go
 │   │   ├── group.go
 │   │   ├── project.go
 │   │   └── user.go
 │   ├── types.go
 │   └── utils.go
 ├── handler              // handler json requests
+│   ├── base.go
+│   ├── base_test.go
 │   ├── db.go
-│   └── register.go
+│   ├── db_test.go
+│   ├── register.go
+│   ├── register_test.go
+│   ├── reset_password.go
+│   └── reset_password_test.go
 ├── middleware
 │   ├── auth.go
 │   └── cors.go
 ├── schema.graphql       // graphql doc
 └── utils
     ├── config.go        // load config
-    └── sms.go           // handle message request with Dayu of Aliyun
+    ├── recovery.go
+    └── sms.go           // handle message request with Dayu of Aliyun and Tencent Cloud SMS Service
 ```
