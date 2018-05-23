@@ -16,7 +16,6 @@ type Query {
 		startYear: Int
 		endYear: Int
 		fromGroupID: Int
-		toGroupID: Int
 		createdTime: String
 	): [Group]
 	company(
@@ -58,7 +57,7 @@ type Mutation {
 		createdTime: String
 		leaderIDs: [Int]
 		fromGroupID: Int
-		toGroupID: int
+		toGroupIDs: [Int]
 		userIDs: [Int]
 	): Group
 	updateUser(
@@ -115,8 +114,8 @@ type Group {
 	endYear: Int! # 0 stands for up to now
 	createdTime: String! # 2018-05-06 18:49:48.032 +0800 CST
 	leaderIDs: [Int]
-	fromGroupID: Int!
-	toGroupID: int!
+	fromGroupID: Int! # 0 stands for none
+	toGroupIDs: [int]
 	memberIDs: [Int]
 }
 
