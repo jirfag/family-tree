@@ -8,8 +8,8 @@
 
 Request|Document
 ---|---
-Restful| <https://www.eolinker.com/#/share/index?shareCode=K2mUw9>
-GraphQL| <https://github.com/fredliang44/family-tree/blob/master/schema.graphql>
+Restful| <https://fmt.fredliang.cn>
+GraphQL| [schema.graphql](schema.graphql)
 
 ## 2. URL
 
