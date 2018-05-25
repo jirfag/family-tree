@@ -14,47 +14,13 @@ import (
 
 // AuthMiddleware is a middleware to validate
 var AuthMiddleware = &jwt.GinJWTMiddleware{
-	Realm:      "Auth Middleware",
-	Key:        []byte(utils.AppConfig.Server.SecretKey),
-	Timeout:    time.Hour * 24,
+	Realm:   "Auth Middleware",
+	Key:     []byte(utils.AppConfig.Server.SecretKey),
+	Timeout: refreshTimeOut(),
+
 	MaxRefresh: time.Hour,
-	Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
-		res, err := db.FetchUserCache(username)
-		if err != nil {
-			log.Println("User Cache Do Not Exist", err)
-			res, err = db.FetchUserFromMongo(username)
-			if err != nil {
-				log.Println("fetchUserFromMongo", err)
-				return "User Do Not Exist", false
-			}
-		}
-		if res.IsActivated != true {
-			log.Println("GetUser: ", err)
-			return "Please verify your account", false
-		}
-		isOK := CheckPasswordHash(password, res.Password)
-		if isOK {
-			cache, _ := msgpack.Marshal(&res)
-			db.RedisClient.Set(res.Username, cache, 0)
-			return res.Username, true
-		}
 
-		// Wrong passwork in cache, fetch user from mongo
-		log.Println(username, "Wrong passwork in cache, fetch user from mongo")
-		res, err = db.FetchUserFromMongo(username)
-		if err != nil {
-			log.Println("fetchUserFromMongo", err)
-		}
-
-		isOK = CheckPasswordHash(password, res.Password)
-
-		if isOK {
-			db.LoadUserCache(res)
-			return res.Username, true
-		}
-
-		return username, false
-	},
+	Authenticator: auth,
 	Authorizator: func(username string, c *gin.Context) bool {
 
 		res, err := db.FetchUserCache(username)
@@ -98,6 +64,66 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 
 	// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
 	TimeFunc: time.Now,
+}
+
+// @Summary Refresh Token
+// @Description Refresh Token
+// @Tags additional
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Success 200 {object} utils.TokenResp
+// @Failure 400 {object} utils.ErrResp
+// @Router /refresh_token [get]
+func refreshTimeOut() time.Duration {
+	return time.Hour * 24
+}
+
+// @Summary Login
+// @Description Login
+// @Tags Login
+// @Accept  json
+// @Produce  json
+// @Param 	Login body utils.LoginReq true "Login"
+// @Success 200 {object} utils.TokenResp
+// @Failure 400 {object} utils.ErrResp
+// @Router /login [post]
+func auth(username string, password string, c *gin.Context) (string, bool) {
+	res, err := db.FetchUserCache(username)
+	if err != nil {
+		log.Println("User Cache Do Not Exist", err)
+		res, err = db.FetchUserFromMongo(username)
+		if err != nil {
+			log.Println("fetchUserFromMongo", err)
+			return "User Do Not Exist", false
+		}
+	}
+	if res.IsActivated != true {
+		log.Println("GetUser: ", err)
+		return "Please verify your account", false
+	}
+	isOK := CheckPasswordHash(password, res.Password)
+	if isOK {
+		cache, _ := msgpack.Marshal(&res)
+		db.RedisClient.Set(res.Username, cache, 0)
+		return res.Username, true
+	}
+
+	// Wrong passwork in cache, fetch user from mongo
+	log.Println(username, "Wrong passwork in cache, fetch user from mongo")
+	res, err = db.FetchUserFromMongo(username)
+	if err != nil {
+		log.Println("fetchUserFromMongo", err)
+	}
+
+	isOK = CheckPasswordHash(password, res.Password)
+
+	if isOK {
+		db.LoadUserCache(res)
+		return res.Username, true
+	}
+
+	return username, false
 }
 
 // CheckPasswordHash is a func to check password hash

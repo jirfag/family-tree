@@ -15,15 +15,16 @@ import (
 	"net/http"
 )
 
+// GenResetCode is a func to handler register request
 // @Summary Gen Reset Code
 // @Description Generate register phone sms auth code
+// @Tags Reset
 // @Accept  json
 // @Produce  json
 // @Param 	GenResetCode body utils.GenResetCodeReq true "Gen Reset Code"
 // @Success 200 {object} utils.StdResp
 // @Failure 400 {object} utils.ErrResp
 // @Router /reset_password_code [post]
-// GenResetCode is a func to handler register request
 func GenResetCode(c *gin.Context) {
 	var info register
 	var data register
@@ -36,7 +37,7 @@ func GenResetCode(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintln(err)})
+		c.JSON(http.StatusBadRequest, utils.ErrResp{Message: fmt.Sprintln(err), Code: http.StatusBadRequest})
 		return
 	}
 
@@ -49,44 +50,45 @@ func GenResetCode(c *gin.Context) {
 	// send sms
 	// Using tencent cloud
 	// isOK, msg, errID := utils.SendDYSMS(data.Phone, "SMS_133979618", `{"code":"`+code+`"}`) DAYU example
-	isOK, msg, errID := utils.SendQCSMS(data.Phone, 96385, []string{"Family Tree", code})
+	isOK, msg, _ := utils.SendQCSMS(data.Phone, 96385, []string{"Family Tree", code})
 
 	if !isOK {
-		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
+		c.JSON(http.StatusBadRequest, utils.ErrResp{Message: msg, Code: http.StatusBadRequest})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "OK", "code": http.StatusOK})
+	c.JSON(http.StatusOK, utils.StdResp{Message: "OK", Code: http.StatusOK})
 }
 
+// ResetPassword is a func to verify sms code
 // @Summary Reset Password
 // @Description Phrase reset password request
+// @Tags Reset
 // @Accept  json
 // @Produce  json
 // @Param 	ResetPassword body utils.ResetReq true "Verify Reset Code"
 // @Success 200 {object} utils.VerifyResp
 // @Failure 400 {object} utils.ErrResp
 // @Router /reset [post]
-// ResetPassword is a func to verify sms code
 func ResetPassword(c *gin.Context) {
 	var info register
 	var data register
 	c.BindJSON(&info)
 
 	if info.Username == "" || info.Password == "" || info.VerifyCode == "" {
-		c.JSON(http.StatusNotAcceptable, gin.H{"message": "Missing parameter", "code": http.StatusNotAcceptable})
+		c.JSON(http.StatusNotAcceptable, utils.ErrResp{Message: "Missing parameter", Code: http.StatusNotAcceptable})
 		return
 	}
 
 	// load user info from db
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": info.Username}).One(&data)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Error occur when fetching user", "code": http.StatusBadRequest})
+		c.JSON(http.StatusBadRequest, utils.ErrResp{Message: "Error occur when fetching user", Code: http.StatusBadRequest})
 		return
 	}
 
 	if info.VerifyCode != data.VerifyCode {
-		c.JSON(http.StatusExpectationFailed, gin.H{"message": "Wrong code", "code": http.StatusExpectationFailed})
+		c.JSON(http.StatusExpectationFailed, utils.ErrResp{Message: "Wrong code", Code: http.StatusExpectationFailed})
 		return
 	}
 
@@ -98,5 +100,5 @@ func ResetPassword(c *gin.Context) {
 			"password": hashedPassword}},
 	)
 
-	c.JSON(http.StatusOK, gin.H{"message": "OK", "code": http.StatusOK})
+	c.JSON(http.StatusOK, utils.StdResp{Message: "OK", Code: http.StatusOK})
 }

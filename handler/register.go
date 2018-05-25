@@ -15,15 +15,16 @@ import (
 	"time"
 )
 
+// GenCode is a func to gen register code
 // @Summary Gen Register Code
 // @Description Generate register phone sms auth code
+// @Tags Register
 // @Accept  json
 // @Produce  json
 // @Param 	GenCode body utils.GenCodeReq true "Gen Register Code"
 // @Success 200 {object} utils.StdResp
 // @Failure 400 {object} utils.ErrResp
 // @Router /register_code [post]
-// GenCode is a func to gen register code
 func GenCode(c *gin.Context) {
 	var info register
 	c.BindJSON(&info)
@@ -34,7 +35,7 @@ func GenCode(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintln(err), "code": http.StatusConflict})
+		c.JSON(http.StatusBadRequest, utils.ErrResp{Message: fmt.Sprintln(err), Code: http.StatusConflict})
 		return
 	}
 
@@ -47,7 +48,7 @@ func GenCode(c *gin.Context) {
 
 	// handle password
 	if err := validator.Validate(info); err != nil {
-		c.JSON(http.StatusNotAcceptable, gin.H{"message": err, "code": http.StatusNotAcceptable})
+		c.JSON(http.StatusNotAcceptable, utils.ErrResp{Message: fmt.Sprintln(err), Code: http.StatusNotAcceptable})
 		return
 	}
 
@@ -56,10 +57,10 @@ func GenCode(c *gin.Context) {
 	// send sms
 	// Using tencent cloud
 	// isOK, msg, errID := utils.SendDYSMS(data.Phone, "SMS_133979618", `{"code":"`+code+`"}`) DAYU example
-	isOK, msg, errID := utils.SendQCSMS(info.Phone, 96385, []string{"Family Tree", info.VerifyCode})
+	isOK, msg, _ := utils.SendQCSMS(info.Phone, 96385, []string{"Family Tree", info.VerifyCode})
 
 	if !isOK {
-		c.JSON(http.StatusBadRequest, gin.H{"message": msg, "err_id": errID})
+		c.JSON(http.StatusBadRequest, utils.ErrResp{Message: msg, Code: http.StatusBadRequest})
 		return
 	}
 
@@ -67,18 +68,19 @@ func GenCode(c *gin.Context) {
 	info.ID = ai.Next("user")
 	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
 
-	c.JSON(http.StatusOK, gin.H{"message": "OK", "code": http.StatusOK})
+	c.JSON(http.StatusOK, utils.StdResp{Message: "OK", Code: http.StatusOK})
 }
 
+// RegisterHandler is a func to verify sms code
 // @Summary Register
 // @Description Register after verify sms code
+// @Tags Register
 // @Accept  json
 // @Produce  json
 // @Param 	Register body utils.RegisterReq true "Verify Register Code"
 // @Success 200 {object} utils.VerifyResp
 // @Failure 400 {object} utils.ErrResp
 // @Router /register [post]
-// RegisterHandler is a func to verify sms code
 func RegisterHandler(c *gin.Context) {
 	var data register
 	var info register
@@ -87,24 +89,22 @@ func RegisterHandler(c *gin.Context) {
 	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(bson.M{"username": data.Username}).One(&info)
 
 	if info.Username == "" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "No such user", "code": http.StatusNotFound})
+		c.JSON(http.StatusNotFound, utils.ErrResp{Message: "No such user", Code: http.StatusNotFound})
 		return
 	}
 
 	if info.IsActivated == true && info.VerifyCode == data.VerifyCode {
-		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Already Verifyed", "code": http.StatusOK})
+		c.JSON(http.StatusConflict, utils.ErrResp{Message: "Already Activated", Code: http.StatusConflict})
 		return
 	}
-
-	fmt.Println("info.VerifyCode: ", info.VerifyCode, "data.VerifyCode: ", data.VerifyCode)
 
 	if info.VerifyCode == data.VerifyCode {
 		info.IsActivated = true
 		db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Update(bson.M{"username": data.Username}, &info)
-		c.JSON(http.StatusOK, gin.H{"message": "OK", "status": "Verifyed", "code": http.StatusOK})
+		c.JSON(http.StatusOK, utils.StdResp{Message: "OK", Code: http.StatusOK})
 		return
 	}
-	c.JSON(http.StatusForbidden, gin.H{"message": "Wrong Verify Code", "code": http.StatusForbidden})
+	c.JSON(http.StatusForbidden, utils.ErrResp{Message: "Wrong Verify Code", Code: http.StatusForbidden})
 }
 
 type register struct {

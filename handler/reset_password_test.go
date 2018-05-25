@@ -18,7 +18,7 @@ func TestGenResetCode(t *testing.T) {
 			"username": "test_err_sms1",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, `{"err_id":"", "message":"Testing err sms"}`, r.Body.String())
+			assert.JSONEq(t, `{"message":"Testing err sms", "code":400}`, r.Body.String())
 			assert.Equal(t, http.StatusBadRequest, r.Code)
 		})
 
@@ -37,7 +37,7 @@ func TestGenResetCode(t *testing.T) {
 			"username": "test_fasdaamily_tree",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, `{"msg":"No Such User\n"}`, r.Body.String())
+			assert.JSONEq(t, `{"message":"No Such User\n", "code":400}`, r.Body.String())
 			assert.Equal(t, http.StatusBadRequest, r.Code)
 		})
 }

@@ -29,7 +29,7 @@ func SendDYSMS(Phone, Template, Dict string) (isOK bool, msg string, errID strin
 	return true, "Done", respond
 }
 
-// SendDYSMS is a func to handle sms with qcloud
+// SendQCSMS is a func to handle sms with qcloud
 func SendQCSMS(Phone string, Template int, ParamList []string) (isOK bool, msg string, errID string) {
 	if gin.Mode() == "test" {
 		if Phone == "17777766667" || Phone == "" {

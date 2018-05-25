@@ -11,14 +11,15 @@ import (
 	"time"
 )
 
+// InitDB is a func to init db for unit test
 // @Summary InitDB
 // @Description InitDB for unit test
+// @Tags additional
 // @Accept  json
 // @Produce  json
 // @Security ApiKeyAuth
 // @Success 200 {object} utils.StdResp
 // @Router /init_db [get]
-// InitDB is a func to init db for unit test
 func InitDB(c *gin.Context) {
 	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").RemoveAll(nil)
 

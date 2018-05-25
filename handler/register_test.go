@@ -21,7 +21,7 @@ func TestGenCode(t *testing.T) {
 			"phone":    "17777766667",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, `{"err_id":"", "message":"Testing err sms"}`, r.Body.String())
+			assert.JSONEq(t, `{"message":"Testing err sms", "code":400}`, r.Body.String())
 			assert.Equal(t, http.StatusBadRequest, r.Code)
 		})
 
@@ -33,7 +33,7 @@ func TestGenCode(t *testing.T) {
 			"phone":    "17777766666",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, `{"code":409, "msg":"Username exists\n"}`, r.Body.String())
+			assert.JSONEq(t, `{"message":"Username exists\n", "code":409}`, r.Body.String())
 			assert.Equal(t, http.StatusBadRequest, r.Code)
 		})
 
@@ -71,7 +71,7 @@ func TestRegister(t *testing.T) {
 			"verifyCode": "2333",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, "{\"code\":200,\"message\":\"OK\",\"status\":\"Verifyed\"}", r.Body.String())
+			assert.JSONEq(t, `{"message":"OK", "code":200}`, r.Body.String())
 			assert.Equal(t, http.StatusOK, r.Code)
 		})
 	r.POST("/register").
@@ -91,8 +91,8 @@ func TestRegister(t *testing.T) {
 			"verifyCode": "2333",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, "{\"code\":200,\"message\":\"OK\",\"status\":\"Already Verifyed\"}", r.Body.String())
-			assert.Equal(t, http.StatusOK, r.Code)
+			assert.JSONEq(t, `{"message":"Already Activated", "code":409}`, r.Body.String())
+			assert.Equal(t, http.StatusConflict, r.Code)
 		})
 	r.POST("/register").
 		SetDebug(true).
@@ -101,7 +101,7 @@ func TestRegister(t *testing.T) {
 			"verifyCode": "2324",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, "{\"message\":\"Wrong Verify Code\", \"code\":403}", r.Body.String())
+			assert.JSONEq(t, `{"message":"Wrong Verify Code", "code":403}`, r.Body.String())
 			assert.Equal(t, http.StatusForbidden, r.Code)
 		})
 }

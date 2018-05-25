@@ -22,7 +22,7 @@ import (
 )
 
 // @title Family Tree API
-// @version 1.0
+// @version 0.1
 // @description This is a Family Tree API server.
 
 // @contact.name Fred Liang
@@ -45,18 +45,19 @@ func init() {
 }
 
 func main() {
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger())
 
 	// CORS support
 	r.Use(middleware.CORSMiddleware())
+
+	// recovery from internal server error
+	r.Use(nice.Recovery(utils.RecoveryHandler))
 
 	if gin.Mode() == "release" {
 		// Logging to a file.
 		f, _ := os.Create("server.log")
 		gin.DefaultWriter = io.MultiWriter(f)
-
-		// recovery from internal server error
-		r.Use(nice.Recovery(utils.RecoveryHandler))
 
 		// limit request frequency per minute
 		r.Use(iplimiter.NewRateLimiterMiddleware(db.RedisClient, "general", 200, time.Minute))
