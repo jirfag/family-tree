@@ -1,24 +1,21 @@
-.PHONY: all example test
-
 export PROJECT_PATH = $GOPATH/src/family-tree
 
 all: test
 
-example:
-	export GIN_MODE=test && go test -v -cover ./handler
+env:
+	export GIN_MODE=test && \
+	swag init
 
-test: example
+test: env
 	go test -v -cover ./handler
 
-cov:
+cov: test
 	go test -race ./handler -coverprofile=coverage.txt -covermode=atomic
 
-docker_test: clean
-	docker run --rm \
-		-v $(PWD):$(PROJECT_PATH) \
-		-w=$(PROJECT_PATH) \
-		fredliang/golang-testing \
-		sh -c "coverage all"
+deploy: env
+	GOOS=linux GOARCH=amd64  go build -tags=jsoniter ./main.go && \
+    docker build -t $(DOCKER_REGISTRY)/fredliang/family-tree  .  && \
+    docker push $(DOCKER_REGISTRY)/fredliang/family-tree
 
 clean:
-	rm -rf coverage.txt
+	rm -rf coverage.txt main docs
