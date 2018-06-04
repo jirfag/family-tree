@@ -3,10 +3,9 @@ package db
 import (
 	t "family-tree/graphql/types"
 	"family-tree/utils"
-	"github.com/getsentry/raven-go"
-	"github.com/go-redis/redis"
-	"github.com/vmihailenco/msgpack"
 	"log"
+
+	"github.com/go-redis/redis"
 )
 
 // RedisClient locate mongo db client
@@ -23,20 +22,19 @@ func redisClient() *redis.Client {
 
 // LoadUserCache is a func to load user data to redis
 func LoadUserCache(user t.User) {
-	cache, _ := msgpack.Marshal(&user)
-	RedisClient.Set(user.Username, cache, 0)
+	//cache, _ := msgpack.Marshal(&user)
+	CacheClient.Set(user.Username, user, -1)
 }
 
 // FetchUserCache is a func to fetch user data from redis
 func FetchUserCache(username string) (user t.User, err error) {
-	var res = t.User{}
-	resp, _ := RedisClient.Get(username).Bytes()
-	err = msgpack.Unmarshal(resp, &res)
-	if err != nil {
-		raven.CaptureError(err, nil)
-		log.Println("Get User from redis: ", err)
+	var res t.User
+	raw, isExist := CacheClient.Get(username)
+	if !isExist {
+		log.Println("Get User from cache: ", err)
 		res, err = FetchUserFromMongo(username)
 		return res, err
 	}
-	return res, nil
+
+	return raw.(t.User), nil
 }

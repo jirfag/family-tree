@@ -74,7 +74,7 @@ func LoadConfiguration() Config {
 		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.yml"
 	case "test":
 		fmt.Println("Start test", gin.Mode())
-		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.yml"
+		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.example.yml"
 	}
 
 	var config Config
@@ -85,6 +85,8 @@ func LoadConfiguration() Config {
 	}
 
 	configor.Load(&config, path)
+
+	// Generate secret key
 	if count := len([]rune(config.Server.SecretKey)); count <= 32 {
 		for i := 1; i <= 32-count; i++ {
 			config.Server.SecretKey += "="
@@ -98,7 +100,7 @@ func LoadConfiguration() Config {
 		config.Mongo.Port = os.Getenv("MONGO_PORT")
 		config.Mongo.Username = os.Getenv("MONGO_USERNAME")
 		config.Mongo.Password = os.Getenv("MONGO_PASSWORD")
-		config.Mongo.DB = os.Getenv("MONGO_DB")
+		config.Mongo.DB = os.Getenv("MONGO_TEST_DB")
 		config.Root.Username = os.Getenv("ROOT_USERNAME")
 		config.Root.Password = os.Getenv("ROOT_PASSWORD")
 	}
