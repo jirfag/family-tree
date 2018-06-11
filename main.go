@@ -85,6 +85,13 @@ func main() {
 		auth.GET("/init_db", handler.InitDB)
 	}
 
+	files := r.Group("/files")
+	//files.Use(middleware.AuthMiddleware.MiddlewareFunc())
+	{
+		files.GET("/token", handler.GetPolicyTokenHandler)
+		files.POST("/callback", handler.FilesCallBackHandler)
+	}
+
 	// Use ginSwagger gen api doc
 	r.GET("/doc/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/", func(c *gin.Context) { c.Redirect(http.StatusPermanentRedirect, "/doc/index.html") })

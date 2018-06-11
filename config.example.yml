@@ -28,6 +28,12 @@ redis:
   password:
   db:       0
 
+oss:
+  accesskeyid:
+  accesskeysecret:
+  host:
+  callback:
+
 root:
   username: username
   password: password

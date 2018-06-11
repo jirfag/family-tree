@@ -3,11 +3,12 @@ package db
 import (
 	t "family-tree/graphql/types"
 	"family-tree/utils"
+	"log"
+
 	"github.com/getsentry/raven-go"
-	ai "github.com/night-codes/mgo-ai"
+	"github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 )
 
 // DBSession locate mongo db session

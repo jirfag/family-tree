@@ -9,5 +9,6 @@ WORKDIR /app
 ENV GIN_MODE release
 ADD config.deploy.yml /app/config.deploy.yml
 ADD main /app/main
+ADD docs /app/docs/
 RUN chmod +x ./main
 CMD ["./main"]

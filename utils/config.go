@@ -48,6 +48,13 @@ type Config struct {
 		DB       int    `default:"db"`
 	}
 
+	OSS struct {
+		AccessKeyID     string `default:""`
+		AccessKeySecret string `default:""`
+		Host            string `default:""`
+		CallBack        string `default:""`
+	}
+
 	Root struct {
 		Username string `required:"true"`
 		Password string `required:"true"`
