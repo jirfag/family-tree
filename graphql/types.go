@@ -20,6 +20,7 @@ var userType = graphql.NewObject(graphql.ObjectConfig{
 		"verifyCode":       &graphql.Field{Type: graphql.String},
 		"createdTime":      &graphql.Field{Type: graphql.String},
 		"isGraduate":       &graphql.Field{Type: graphql.Boolean},
+		"position":         &graphql.Field{Type: graphql.String},
 		"IsActivated":      &graphql.Field{Type: graphql.Boolean},
 		"IsValidated":      &graphql.Field{Type: graphql.Boolean},
 		"IsBasicCompleted": &graphql.Field{Type: graphql.Boolean},
@@ -70,6 +71,7 @@ var projectType = graphql.NewObject(graphql.ObjectConfig{
 		"year":        &graphql.Field{Type: graphql.Int},
 		"startedTime": &graphql.Field{Type: graphql.String},
 		"endedTime":   &graphql.Field{Type: graphql.String},
+		"github":      &graphql.Field{Type: graphql.String},
 		"adminID":     &graphql.Field{Type: graphql.ID},
 		"logo":        &graphql.Field{Type: graphql.String},
 		"createdTime": &graphql.Field{Type: graphql.String},
@@ -92,6 +94,13 @@ var projectType = graphql.NewObject(graphql.ObjectConfig{
 			Type: graphql.NewList(graphql.Int),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				return p.Source.(t.Project).MemberIDs, nil
+			},
+		},
+		"roles": &graphql.Field{
+			Name: "roles Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.Project).Roles, nil
 			},
 		},
 	},

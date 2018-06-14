@@ -21,13 +21,13 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 	MaxRefresh: time.Hour,
 
 	Authenticator: auth,
-	Authorizator: func(username string, c *gin.Context) bool {
+	Authorizator: func(username interface{}, c *gin.Context) bool {
 
-		res, err := db.FetchUserCache(username)
+		res, err := db.FetchUserCache(username.(string))
 
 		if err != nil {
 			log.Println("User Cache Do Not Exist", err)
-			res, err = db.FetchUserFromMongo(username)
+			res, err = db.FetchUserFromMongo(username.(string))
 			if err != nil {
 				log.Println("fetchUserFromMongo", err)
 				return false
@@ -88,7 +88,7 @@ func refreshTimeOut() time.Duration {
 // @Success 200 {object} utils.TokenResp
 // @Failure 400 {object} utils.ErrResp
 // @Router /login [post]
-func auth(username string, password string, c *gin.Context) (string, bool) {
+func auth(username string, password string, c *gin.Context) (interface{}, bool) {
 	res, err := db.FetchUserCache(username)
 	if err != nil {
 		log.Println("User Cache Do Not Exist", err)
