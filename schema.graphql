@@ -94,6 +94,7 @@ type User {
 	loaction: String
 	verifyCode: String
 	createdTime: String # 2018-05-06 18:49:48.032 +0800 CST
+	position: String
 	isGraduate: Boolean
 	isActivated: Boolean
 	isValidated: Boolean
@@ -113,6 +114,7 @@ type Group {
 	startYear: Int!
 	endYear: Int! # 0 stands for up to now
 	createdTime: String! # 2018-05-06 18:49:48.032 +0800 CST
+	logo:string!
 	leaderIDs: [Int]
 	fromGroupID: Int! # 0 stands for none
 	toGroupIDs: [int]
@@ -125,12 +127,14 @@ type Project {
 	description: String
 	startedTime: String
 	endedTime: String
-	createdTime: String!
 	adminID: Int!
+	github: String
 	logo: String # image URL
 	images: [String] # image URL
 	files: [String] # files URL
 	memberIDs: [Int]
+	roles: [String]
+	createdTime: String!
 }
 
 type Company {

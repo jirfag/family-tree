@@ -46,5 +46,8 @@ func GinEngine() *gin.Engine {
 	r.GET("/refresh_token", middleware.AuthMiddleware.RefreshHandler)
 	r.GET("/init_db", InitDB)
 
+	r.GET("/files/token", GetPolicyTokenHandler)
+	r.POST("/files/callback", FilesCallBackHandler)
+
 	return r
 }

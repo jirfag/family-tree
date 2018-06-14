@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"family-tree/db"
 	"family-tree/utils"
 	"fmt"
 	"io/ioutil"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // GetPolicyTokenHandler is a func to get PolicyTokenHandler for OSS file upload
@@ -61,14 +63,52 @@ func GetPolicyTokenHandler(c *gin.Context) {
 // @Success 200 {object} utils.PolicyToken
 // @Router /files/callback [get]
 func FilesCallBackHandler(c *gin.Context) {
-	//claims := jwt.ExtractClaims(c) // load from jwt middleware
+	claims := jwt.ExtractClaims(c) // load from jwt middleware
+	var username string
+	if claims["id"] == nil {
+		username = "temp"
+	} else {
+		username = claims["id"].(string)
+	}
 
 	var data utils.CallBackBody
 
-	buf, bodyErr := ioutil.ReadAll(c.Request.Body)
-	if bodyErr != nil {
-		log.Print("bodyErr ", bodyErr.Error())
+	buf, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		log.Print("bodyErr ", err.Error())
 		return
+	}
+
+	action := data.Action
+	switch action {
+	case "init":
+		action = "$update"
+		break
+	case "append":
+		action = "$push"
+		break
+	}
+
+	if data.Field == "avatar" || data.Field == "logo" {
+		err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C(data.Table).Update(
+			bson.M{"username": username},
+			bson.M{
+				"$update": bson.M{
+					data.Field: data.FilePath,
+				},
+			})
+	} else {
+		err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C(data.Table).Update(
+			bson.M{"username": username},
+			bson.M{
+				action: bson.M{
+					data.Field: []string{data.FilePath},
+				},
+			})
+	}
+
+	if err != nil {
+		c.JSON(http.StatusNotAcceptable, utils.ErrResp{Code: http.StatusNotAcceptable, Message: err.Error()})
 	}
 
 	// fix ali oss handler error
