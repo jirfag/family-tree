@@ -1,16 +1,14 @@
 language: go
 
 go:
-  - 1.10.x
-  - 1.9.x
   - master
 
 env:
-  - DEP_VERSION="0.4.1" GIN_MODE="test"
+  - GIN_MODE="test"
 
-#cache:
-#  directories:
-#    - $HOME/gopath/src/
+cache:
+  directories:
+    - $HOME/gopath/src/
 
 before_install:
   - rm -rf $HOME/gopath/src/family-tree

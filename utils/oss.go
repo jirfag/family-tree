@@ -92,11 +92,11 @@ func GetPolicyToken(username string) PolicyToken {
 	callbackParam.CallbackBody = string(callbackData)
 	//"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}"
 	callbackParam.CallbackBodyType = "application/json"
-	callback_str, err := json.Marshal(callbackParam)
+	callbackStr, err := json.Marshal(callbackParam)
 	if err != nil {
 		fmt.Println("callback json err:", err)
 	}
-	callbackBase64 := base64.StdEncoding.EncodeToString(callback_str)
+	callbackBase64 := base64.StdEncoding.EncodeToString(callbackStr)
 
 	//calucate signature
 	result, _ := json.Marshal(config)

@@ -80,6 +80,13 @@ var projectType = graphql.NewObject(graphql.ObjectConfig{
 				return p.Source.(t.Project).Images, nil
 			},
 		},
+		"files": &graphql.Field{
+			Name: "files url Type",
+			Type: graphql.NewList(graphql.String),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.Project).Files, nil
+			},
+		},
 		"memberIDs": &graphql.Field{
 			Name: "memberIDs Type",
 			Type: graphql.NewList(graphql.Int),

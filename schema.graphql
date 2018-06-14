@@ -123,11 +123,13 @@ type Project {
 	id: Int!
 	title: String!
 	description: String
-	year: Int!
+	startedTime: String
+	endedTime: String
 	createdTime: String!
 	adminID: Int!
 	logo: String # image URL
 	images: [String] # image URL
+	files: [String] # files URL
 	memberIDs: [Int]
 }
 
