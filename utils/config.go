@@ -76,12 +76,12 @@ func LoadConfiguration() Config {
 
 	switch gin.Mode() {
 	case "release":
-		path = strings.Replace(path, "test", "", -1) + "/config.deploy.yml"
+		path = strings.Replace(path, "test", "", -1) + "/config/config.deploy.yml"
 	case "debug":
-		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.yml"
+		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config/config.yml"
 	case "test":
 		fmt.Println("Start test", gin.Mode())
-		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config.example.yml"
+		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config/config.example.yml"
 	}
 
 	var config Config
