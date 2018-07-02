@@ -45,10 +45,19 @@ func TestGenCode(t *testing.T) {
 			"phone":    "17777766666",
 		}).
 		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.JSONEq(t, `{"code":200, "message":"OK"}`, r.Body.String())
 			assert.Equal(t, http.StatusOK, r.Code)
+			assert.JSONEq(t, `{"code":200, "message":"OK"}`, r.Body.String())
 		})
-
+	r.POST("/register_code").
+		SetDebug(true).
+		SetJSON(gofight.D{
+			"username": "test_fasdasdasdasdadsasdasdhoahduhaoushoaamily_tree",
+			"password": "test",
+			"phone":    "17777766666",
+		}).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.Equal(t, http.StatusNotAcceptable, r.Code)
+		})
 	r.POST("/register_code").
 		SetDebug(true).
 		SetJSON(gofight.D{

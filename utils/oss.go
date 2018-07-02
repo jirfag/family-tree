@@ -60,13 +60,14 @@ type CallbackParam struct {
 // CallBackBody to save callback content
 type CallBackBody struct {
 	FilePath string `json:"filePath"`
-	Table    string `json:"table"`  // including: user, company, group
+	Table    string `json:"table"` // including: user, company, group
+	TableID  int    `json:"tableID"`
 	Field    string `json:"field"`  // example: avatar, logo, images
 	Action   string `json:"action"` // including: init, append{
 }
 
 // GetPolicyToken is a func to get PolicyToken
-func GetPolicyToken(username string) PolicyToken {
+func GetPolicyToken(username, table, field, action string, tableID int) PolicyToken {
 	now := time.Now().Unix()
 	expireEnd := now + expireTime
 	var tokenExpire = getGmtIso8601(expireEnd)
@@ -85,9 +86,10 @@ func GetPolicyToken(username string) PolicyToken {
 
 	callbackData, _ := json.Marshal(CallBackBody{
 		FilePath: "${object}",
-		Table:    "CallbackTable",
-		Action:   "CallbackAction",
-		Field:    "CallbackField"})
+		Table:    table,
+		Action:   action,
+		Field:    field,
+		TableID:  tableID})
 
 	callbackParam.CallbackBody = string(callbackData)
 	//"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}"

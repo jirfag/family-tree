@@ -50,7 +50,7 @@ func GetPolicyTokenHandler(c *gin.Context) {
 
 	fmt.Println(username, table, tableID, field, action)
 
-	c.JSON(http.StatusOK, utils.GetPolicyToken("test"))
+	c.JSON(http.StatusOK, utils.GetPolicyToken(username, table, field, action, tableID))
 }
 
 // FilesCallBackHandler is a func to handle call back request
@@ -87,6 +87,9 @@ func FilesCallBackHandler(c *gin.Context) {
 	case "append":
 		action = "$push"
 		break
+	default:
+		c.JSON(http.StatusNotAcceptable, utils.ErrResp{Code: http.StatusNotAcceptable, Message: "Action not found"})
+		return
 	}
 
 	if data.Field == "avatar" || data.Field == "logo" {
@@ -108,7 +111,8 @@ func FilesCallBackHandler(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusNotAcceptable, utils.ErrResp{Code: http.StatusNotAcceptable, Message: err.Error()})
+		c.JSON(http.StatusNotFound, utils.ErrResp{Code: http.StatusNotAcceptable, Message: err.Error()})
+		return
 	}
 
 	// fix ali oss handler error

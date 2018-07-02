@@ -24,3 +24,15 @@ func TestGetPolicyToken(t *testing.T) {
 		})
 
 }
+
+func TestFilesCallBack(t *testing.T) {
+	r := gofight.New()
+
+	// check err sending code
+	r.GET("/files/callback").
+		SetDebug(true).
+		Run(GinEngine(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+			assert.Equal(t, http.StatusNotFound, r.Code)
+		})
+
+}

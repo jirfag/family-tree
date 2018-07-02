@@ -6,13 +6,14 @@ import (
 	"family-tree/middleware"
 	"family-tree/utils"
 	"fmt"
+	"math/rand"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/validator.v2"
-	"math/rand"
-	"net/http"
-	"time"
 )
 
 // GenCode is a func to gen register code
@@ -66,9 +67,14 @@ func GenCode(c *gin.Context) {
 
 	// save user info
 	info.ID = ai.Next("user")
-	db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
 
-	c.JSON(http.StatusOK, utils.StdResp{Message: "OK", Code: http.StatusOK})
+	if utils.ValidatePhone(info.Phone) {
+		db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Insert(info)
+		c.JSON(http.StatusOK, utils.StdResp{Message: "OK", Code: http.StatusOK})
+	} else {
+		c.JSON(http.StatusConflict, utils.ErrResp{Message: "Wrong Phone Number", Code: http.StatusConflict})
+	}
+
 }
 
 // RegisterHandler is a func to verify sms code
@@ -110,8 +116,8 @@ func RegisterHandler(c *gin.Context) {
 type register struct {
 	ID          uint64    `json:"id" bson:"_id,omitempty"`
 	Username    string    `validate:"min=3,max=20" bson:"username" json:"username"`
-	Password    string    `validate:"min=3,max=30,regexp=^((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[a-z]).*$" bson:"password" json:"password"`
-	Phone       string    `validate:"len=11,regexp=^1[34578]\d{9}$" bson:"phone" json:"phone"`
+	Password    string    `validate:"min=3,max=30" bson:"password" json:"password"`
+	Phone       string    `validate:"len=11" bson:"phone" json:"phone"`
 	VerifyCode  string    `bson:"verifyCode" json:"verifyCode"`
 	IsActivated bool      `bson:"isActivated" json:"isActivated"`
 	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`
