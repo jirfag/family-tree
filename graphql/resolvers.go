@@ -8,12 +8,13 @@ import (
 	"family-tree/utils"
 	"fmt"
 
+	"log"
+	"time"
+
 	"github.com/getsentry/raven-go"
 	"github.com/graphql-go/graphql"
 	"github.com/night-codes/mgo-ai"
 	"gopkg.in/mgo.v2/bson"
-	"log"
-	"time"
 )
 
 // GetCompany is a graphql resolver to get company info
@@ -146,6 +147,65 @@ func GetProject(params graphql.ResolveParams) (interface{}, error) {
 		return nil, nil
 	}
 	return res, nil
+}
+
+// AddProject is a graphql resolver to add project
+func AddProject(params graphql.ResolveParams) (interface{}, error) {
+	var res t.Project
+
+	// generate ID
+	res.ID = ai.Next("project")
+
+	// load data
+	title, isOK := params.Args["title"].(string)
+	if isOK {
+		res.Title = title
+	}
+	description, isOK := params.Args["description"].(string)
+	if isOK {
+		res.Description = description
+	}
+	startedYear, isOK := params.Args["startedYear"].(string)
+	if isOK {
+		res.StartedYear = startedYear
+	}
+	endedYear, isOK := params.Args["endedYear"].(string)
+	if isOK {
+		res.EndedYear = endedYear
+	}
+
+	images, isOK := params.Args["images"].([]interface{})
+	if isOK {
+		var tmp = []string{}
+		for i := range images {
+			log.Println("images[i]", images[i])
+			tmp = append(tmp, images[i].(string))
+		}
+		res.Images = tmp
+	}
+
+	adminID, isOK := params.Args["adminID"].(uint64)
+	if isOK {
+		res.AdminID = adminID
+	}
+
+	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
+	if isOK {
+		for i := range memberIDs {
+			log.Println("memberIDs[i]", memberIDs[i])
+			res.MemberIDs = append(res.MemberIDs, uint64(memberIDs[i].(int)))
+		}
+
+	}
+
+	// update company
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Insert(res)
+	if err != nil {
+		log.Println("Add Company: ", err)
+	}
+
+	return res, nil
+
 }
 
 // AddCompany is a graphql resolver to add group group
@@ -331,9 +391,9 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 			p["verifyCode"] = verifyCode
 		}
 
-		isGraduate, isOK := params.Args["isGraduate"].(bool)
+		isGraduated, isOK := params.Args["isGraduated"].(bool)
 		if isOK {
-			p["isGraduate"] = isGraduate
+			p["isGraduated"] = isGraduated
 		}
 		IsActivated, isOK := params.Args["IsActivated"].(bool)
 		if isOK {

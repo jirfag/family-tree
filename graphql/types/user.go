@@ -27,5 +27,6 @@ type User struct {
 	ProjectIDs       []uint64  `bson:"projectIDs" json:"projectIDs"`
 	MentorIDs        []uint64  `bson:"mentorIDs" json:"mentorIDs"`
 	MenteeIDs        []uint64  `bson:"menteeIDs" json:"menteeIDs"`
+	CompanyIDs       []uint64  `bson:"CompanyIDs" json:"CompanyIDs"`
 	GroupIDs         []uint64  `bson:"groupIDs" json:"groupIDs"`
 }

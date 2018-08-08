@@ -33,6 +33,19 @@ type Mutation {
 		createrID: Int
 		memberIDs: [Int]
 	): Company
+	addProject(
+		title: String!
+		description: String
+		startedYear: String
+		endedYear: String
+		adminID: Int!
+		github: String
+		logo: String # image URL
+		images: [String] # image URL
+		files: [String] # files URL
+		memberIDs: [Int]
+		roles: [String]
+	): Project
 	addGroup(
 		groupName: String!
 		startYear: Int!
@@ -71,7 +84,7 @@ type Mutation {
 		loaction: String
 		verifyCode: String
 		createdTime: String
-		isGraduate: Boolean
+		isGraduated: Boolean
 		isActivated: Boolean
 		isBasicCompleted: Boolean
 		isAdmin: Boolean
@@ -91,11 +104,11 @@ type User {
 	phone: String
 	avatar: String
 	wechat: String
-	loaction: String
+	location: String
 	verifyCode: String
 	createdTime: String # 2018-05-06 18:49:48.032 +0800 CST
 	position: String
-	isGraduate: Boolean
+	isGraduated: Boolean
 	isActivated: Boolean
 	isValidated: Boolean
 	isBasicCompleted: Boolean

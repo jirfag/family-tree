@@ -13,6 +13,13 @@ type contextKey string
 var contextKeyUser = contextKey("User")
 
 // Handler is a func to handler graphql requests
+// @Summary Graphql
+// @Description Graphql Handler
+// @Tags graphql
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Router /graphql [post]
 func Handler() gin.HandlerFunc {
 	// Creates a GraphQL-go HTTP handler with the defined schema
 	h := handler.New(&handler.Config{

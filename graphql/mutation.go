@@ -30,6 +30,35 @@ var addCompany = graphql.Field{
 	Resolve: AddCompany,
 }
 
+var addProject = graphql.Field{
+	Name:        "Project",
+	Description: "Add project",
+	Type:        graphql.NewNonNull(projectType),
+	Args: graphql.FieldConfigArgument{
+		"title":       &graphql.ArgumentConfig{Type: graphql.String},
+		"description": &graphql.ArgumentConfig{Type: graphql.String},
+		"startedTime": &graphql.ArgumentConfig{Type: graphql.String},
+		"endedTime":   &graphql.ArgumentConfig{Type: graphql.String},
+		"adminID":     &graphql.ArgumentConfig{Type: graphql.Int},
+		"github":      &graphql.ArgumentConfig{Type: graphql.String},
+		"logo":        &graphql.ArgumentConfig{Type: graphql.String},
+
+		"images": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.String),
+		},
+		"files": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.String),
+		},
+		"memberIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+		"roles": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+	},
+	Resolve: AddProject,
+}
+
 var addGroup = graphql.Field{
 	Name:        "Group",
 	Description: "Add group",
@@ -91,7 +120,7 @@ var updateUser = graphql.Field{
 		"loaction":         &graphql.ArgumentConfig{Type: graphql.String},
 		"verifyCode":       &graphql.ArgumentConfig{Type: graphql.String},
 		"createdTime":      &graphql.ArgumentConfig{Type: graphql.String},
-		"isGraduate":       &graphql.ArgumentConfig{Type: graphql.Boolean},
+		"isGraduated":      &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"IsActivated":      &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"IsBasicCompleted": &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"IsAdmin":          &graphql.ArgumentConfig{Type: graphql.Boolean},

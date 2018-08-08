@@ -2,6 +2,7 @@ package graphql
 
 import (
 	t "family-tree/graphql/types"
+
 	"github.com/graphql-go/graphql"
 )
 
@@ -19,21 +20,49 @@ var userType = graphql.NewObject(graphql.ObjectConfig{
 		"location":         &graphql.Field{Type: graphql.String},
 		"verifyCode":       &graphql.Field{Type: graphql.String},
 		"createdTime":      &graphql.Field{Type: graphql.String},
-		"isGraduate":       &graphql.Field{Type: graphql.Boolean},
+		"isGraduated":      &graphql.Field{Type: graphql.Boolean},
 		"position":         &graphql.Field{Type: graphql.String},
-		"IsActivated":      &graphql.Field{Type: graphql.Boolean},
-		"IsValidated":      &graphql.Field{Type: graphql.Boolean},
-		"IsBasicCompleted": &graphql.Field{Type: graphql.Boolean},
-		"IsAdmin":          &graphql.Field{Type: graphql.Boolean},
-		"mentorsID": &graphql.Field{
-			Name: "mentorsID Type",
+		"isActivated":      &graphql.Field{Type: graphql.Boolean},
+		"isValidated":      &graphql.Field{Type: graphql.Boolean},
+		"isBasicCompleted": &graphql.Field{Type: graphql.Boolean},
+		"isAdmin":          &graphql.Field{Type: graphql.Boolean},
+		"abilities": &graphql.Field{
+			Name: "Abilities Type",
+			Type: graphql.NewList(graphql.String),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.User).Abilities, nil
+			},
+		},
+		"mentorIDs": &graphql.Field{
+			Name: "mentorIDs Type",
 			Type: graphql.NewList(graphql.Int),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				return p.Source.(t.User).MentorIDs, nil
 			},
 		},
-		"groupsID": &graphql.Field{
-			Name: "mentorsID Type",
+		"projectIDs": &graphql.Field{
+			Name: "projectIDs Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.User).ProjectIDs, nil
+			},
+		},
+		"menteeIDs": &graphql.Field{
+			Name: "menteeIDs Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.User).MenteeIDs, nil
+			},
+		},
+		"companyIDs": &graphql.Field{
+			Name: "companyIDs Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.User).CompanyIDs, nil
+			},
+		},
+		"groupIDs": &graphql.Field{
+			Name: "mentorIDs Type",
 			Type: graphql.NewList(graphql.Int),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				return p.Source.(t.User).GroupIDs, nil

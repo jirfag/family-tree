@@ -9,9 +9,9 @@ type Project struct {
 	ID          uint64    `json:"id" bson:"_id,omitempty"`
 	Title       string    `bson:"title" json:"title"`
 	Description string    `bson:"description" json:"description"`
-	StartedTime time.Time `bson:"startedTime" json:"startedTime "`
-	EndedTime   time.Time `bson:"endedTime" json:"endedTime "`
-	AdminID     string    `bson:"adminID" json:"adminID"`
+	StartedYear string    `bson:"startedYear" json:"startedYear "`
+	EndedYear   string    `bson:"endedYear" json:"endedYear "`
+	AdminID     uint64    `bson:"adminID" json:"adminID"`
 	Github      string    `bson:"github" json:"github"`
 	Logo        string    `bson:"logo" json:"logo"`
 	Images      []string  `bson:"image" json:"image"`
