@@ -1,7 +1,7 @@
 package graphql
 
 import (
-	t "family-tree/graphql/types"
+	t "github.com/fredliang44/family-tree/graphql/types"
 
 	"github.com/graphql-go/graphql"
 )

@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"family-tree/utils"
 	"github.com/appleboy/gofight"
+	"github.com/fredliang44/family-tree/utils"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"

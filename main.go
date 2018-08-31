@@ -1,12 +1,6 @@
 package main
 
 import (
-	"family-tree/db"
-	_ "family-tree/docs"
-	"family-tree/graphql"
-	"family-tree/handler"
-	"family-tree/middleware"
-	"family-tree/utils"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,6 +9,12 @@ import (
 
 	"github.com/Salvatore-Giordano/gin-redis-ip-limiter"
 	"github.com/ekyoung/gin-nice-recovery"
+	"github.com/fredliang44/family-tree/db"
+	_ "github.com/fredliang44/family-tree/docs"
+	"github.com/fredliang44/family-tree/graphql"
+	"github.com/fredliang44/family-tree/handler"
+	"github.com/fredliang44/family-tree/middleware"
+	"github.com/fredliang44/family-tree/utils"
 	"github.com/getsentry/raven-go"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
@@ -86,7 +86,6 @@ func main() {
 	}
 
 	files := r.Group("/files")
-	//files.Use(middleware.AuthMiddleware.MiddlewareFunc())
 	{
 		files.GET("/token", handler.GetPolicyTokenHandler)
 		files.POST("/callback", handler.FilesCallBackHandler)

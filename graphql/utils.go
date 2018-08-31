@@ -1,10 +1,10 @@
 package graphql
 
 import (
-	"family-tree/db"
-	types "family-tree/graphql/types"
-	"family-tree/utils"
 	"fmt"
+	"github.com/fredliang44/family-tree/db"
+	types "github.com/fredliang44/family-tree/graphql/types"
+	"github.com/fredliang44/family-tree/utils"
 
 	"github.com/getsentry/raven-go"
 	"github.com/graphql-go/graphql"

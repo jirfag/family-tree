@@ -3,9 +3,9 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"family-tree/db"
-	"family-tree/utils"
 	"fmt"
+	"github.com/fredliang44/family-tree/db"
+	"github.com/fredliang44/family-tree/utils"
 	"io/ioutil"
 	"log"
 	"net/http"

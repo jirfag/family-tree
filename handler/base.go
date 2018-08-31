@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"family-tree/utils"
+	"github.com/fredliang44/family-tree/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

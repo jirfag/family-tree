@@ -2,10 +2,10 @@ package handler
 
 import (
 	"errors"
-	"family-tree/db"
-	"family-tree/middleware"
-	"family-tree/utils"
 	"fmt"
+	"github.com/fredliang44/family-tree/db"
+	"github.com/fredliang44/family-tree/middleware"
+	"github.com/fredliang44/family-tree/utils"
 	"math/rand"
 	"net/http"
 	"time"

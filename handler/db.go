@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"family-tree/db"
-	t "family-tree/graphql/types"
-	m "family-tree/middleware"
-	"family-tree/utils"
+	"github.com/fredliang44/family-tree/db"
+	t "github.com/fredliang44/family-tree/graphql/types"
+	m "github.com/fredliang44/family-tree/middleware"
+	"github.com/fredliang44/family-tree/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/night-codes/mgo-ai"
 	"net/http"

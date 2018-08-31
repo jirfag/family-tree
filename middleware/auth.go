@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"family-tree/db"
-	"family-tree/utils"
+	"github.com/fredliang44/family-tree/db"
+	"github.com/fredliang44/family-tree/utils"
 
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
@@ -21,13 +21,19 @@ var AuthMiddleware = &jwt.GinJWTMiddleware{
 	MaxRefresh: time.Hour,
 
 	Authenticator: auth,
-	Authorizator: func(username interface{}, c *gin.Context) bool {
+	Authorizator: func(data interface{}, c *gin.Context) bool {
+		v, ok := data.(*User)
+		if !ok {
+			return false
+		}
 
-		res, err := db.FetchUserCache(username.(string))
+		username := v.UserName
+
+		res, err := db.FetchUserCache(username)
 
 		if err != nil {
 			log.Println("User Cache Do Not Exist", err)
-			res, err = db.FetchUserFromMongo(username.(string))
+			res, err = db.FetchUserFromMongo(username)
 			if err != nil {
 				log.Println("fetchUserFromMongo", err)
 				return false
@@ -88,25 +94,32 @@ func refreshTimeOut() time.Duration {
 // @Success 200 {object} utils.TokenResp
 // @Failure 400 {object} utils.ErrResp
 // @Router /login [post]
-func auth(username string, password string, c *gin.Context) (interface{}, bool) {
+func auth(c *gin.Context) (interface{}, error) {
+	var loginVals login
+	if err := c.ShouldBind(&loginVals); err != nil {
+		return "", jwt.ErrMissingLoginValues
+	}
+	username := loginVals.Username
+	password := loginVals.Password
+
 	res, err := db.FetchUserCache(username)
 	if err != nil {
 		log.Println("User Cache Do Not Exist", err)
 		res, err = db.FetchUserFromMongo(username)
 		if err != nil {
 			log.Println("fetchUserFromMongo", err)
-			return "User Do Not Exist", false
+			return "User Do Not Exist", jwt.ErrFailedAuthentication
 		}
 	}
 	if res.IsActivated != true {
 		log.Println("GetUser: ", err)
-		return "Please verify your account", false
+		return "Please verify your account", jwt.ErrFailedAuthentication
 	}
 	isOK := CheckPasswordHash(password, res.Password)
 	if isOK {
 		cache, _ := msgpack.Marshal(&res)
 		db.RedisClient.Set(res.Username, cache, 0)
-		return res.Username, true
+		return res.Username, nil
 	}
 
 	// Wrong passwork in cache, fetch user from mongo
@@ -120,10 +133,10 @@ func auth(username string, password string, c *gin.Context) (interface{}, bool) 
 
 	if isOK {
 		db.LoadUserCache(res)
-		return res.Username, true
+		return res.Username, nil
 	}
 
-	return username, false
+	return username, jwt.ErrFailedAuthentication
 }
 
 // CheckPasswordHash is a func to check password hash
@@ -136,4 +149,15 @@ func CheckPasswordHash(password, hash string) bool {
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
+}
+
+type login struct {
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
+type User struct {
+	UserName  string
+	FirstName string
+	LastName  string
 }

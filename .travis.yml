@@ -1,20 +1,19 @@
 language: go
 
 go:
-  - 1.10.x
+  - 1.11.x
   - master
 
 env:
-  - GIN_MODE="test"
+  - GIN_MODE="test" GO111MODULE=on
 
 cache:
   directories:
-    - $HOME/gopath/src/
+    - ./vendor
 
 before_install:
-  - rm -rf $HOME/gopath/src/family-tree
-  - mv $HOME/gopath/src/github.com/fredliang44/family-tree $HOME/gopath/src/
-  - cd $HOME/gopath/src/family-tree
+  - go mod tidy
+  - go mod vendor
   - go get github.com/swaggo/swag/cmd/swag
   - swag init
   - go get -t ./...

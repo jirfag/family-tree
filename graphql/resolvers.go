@@ -2,11 +2,11 @@ package graphql
 
 import (
 	"errors"
-	"family-tree/db"
-	t "family-tree/graphql/types"
-	"family-tree/middleware"
-	"family-tree/utils"
 	"fmt"
+	"github.com/fredliang44/family-tree/db"
+	t "github.com/fredliang44/family-tree/graphql/types"
+	"github.com/fredliang44/family-tree/middleware"
+	"github.com/fredliang44/family-tree/utils"
 
 	"log"
 	"time"

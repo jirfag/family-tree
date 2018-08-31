@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"family-tree/graphql"
-	"family-tree/middleware"
+	"github.com/fredliang44/family-tree/graphql"
+	"github.com/fredliang44/family-tree/middleware"
 
 	"net/http"
 	"testing"

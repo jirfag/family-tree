@@ -1,8 +1,8 @@
 package db
 
 import (
-	t "family-tree/graphql/types"
-	"family-tree/utils"
+	t "github.com/fredliang44/family-tree/graphql/types"
+	"github.com/fredliang44/family-tree/utils"
 	"log"
 
 	"github.com/getsentry/raven-go"
