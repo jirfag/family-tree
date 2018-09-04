@@ -239,9 +239,9 @@ func AddCompany(params graphql.ResolveParams) (interface{}, error) {
 		res.Images = tmp
 	}
 
-	createrID, isOK := params.Args["createrID"].(uint64)
+	creatorID, isOK := params.Args["creatorID"].(uint64)
 	if isOK {
-		res.CreaterID = createrID
+		res.CreatorID = creatorID
 	}
 
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
@@ -568,9 +568,9 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 		}
 		p["images"] = tmp
 	}
-	createrID, isOK := params.Args["createrID"].(uint64)
+	creatorID, isOK := params.Args["creatorID"].(uint64)
 	if isOK {
-		p["createrID"] = createrID
+		p["creatorID"] = creatorID
 	}
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
 	if isOK {
