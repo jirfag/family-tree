@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -80,7 +79,7 @@ func LoadConfiguration() Config {
 	case "debug":
 		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config/config.yml"
 	case "test":
-		fmt.Println("Start test", gin.Mode())
+		log.Println("Start test", gin.Mode())
 		path = strings.Replace(strings.Replace(path, "test", "", -1), "/handler", "", -1) + "/config/config.example.yml"
 	}
 

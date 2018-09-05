@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/GiterLab/aliyun-sms-go-sdk/dysms"
 	"github.com/gin-gonic/gin"
 	"github.com/qichengzx/qcloudsms_go"
@@ -23,7 +25,7 @@ func SendDYSMS(Phone, Template, Dict string) (isOK bool, msg string, errID strin
 	respSendSms, err := dysms.SendSms(uuid.New(), Phone, AppConfig.Dayu.Sign, Template, Dict).DoActionWithException()
 	respond := respSendSms.GetRequestID()
 	if (err != nil) || (respSendSms.GetMessage() != "OK") {
-		fmt.Println("send sms failed", err, respSendSms.Error())
+		log.Println("send sms failed", err, respSendSms.Error())
 		return false, respSendSms.GetMessage(), respond
 	}
 	return true, "Done", respond

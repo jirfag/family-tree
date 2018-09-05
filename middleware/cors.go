@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -25,9 +24,7 @@ func loadConfig() cors.Config {
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-			fmt.Println(origin)
 			return true
-			//return origin == "https://github.com"
 		},
 		MaxAge: 12 * time.Hour,
 	}

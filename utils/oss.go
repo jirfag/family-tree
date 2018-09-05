@@ -5,10 +5,9 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
-
 	"hash"
 	"io"
+	"log"
 	"time"
 )
 
@@ -96,7 +95,7 @@ func GetPolicyToken(username, table, field, action string, tableID int) PolicyTo
 	callbackParam.CallbackBodyType = "application/json"
 	callbackStr, err := json.Marshal(callbackParam)
 	if err != nil {
-		fmt.Println("callback json err:", err)
+		log.Println("callback json err:", err)
 	}
 	callbackBase64 := base64.StdEncoding.EncodeToString(callbackStr)
 

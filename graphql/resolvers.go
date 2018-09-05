@@ -2,7 +2,7 @@ package graphql
 
 import (
 	"errors"
-	"fmt"
+
 	"github.com/fredliang44/family-tree/db"
 	t "github.com/fredliang44/family-tree/graphql/types"
 	"github.com/fredliang44/family-tree/middleware"
@@ -456,7 +456,6 @@ func UpdateGroup(params graphql.ResolveParams) (interface{}, error) {
 
 	// check user exist
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Find(p).One(&p)
-	fmt.Println(p)
 	if err != nil {
 		log.Println("Update Group error: ", err)
 		return nil, err
@@ -540,7 +539,7 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 
 	// check user exist
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Find(p).One(&p)
-	fmt.Println(p)
+
 	if err != nil {
 		log.Println("Update Company error: ", err)
 		return nil, err

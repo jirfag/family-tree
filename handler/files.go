@@ -48,8 +48,6 @@ func GetPolicyTokenHandler(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(username, table, tableID, field, action)
-
 	c.JSON(http.StatusOK, utils.GetPolicyToken(username, table, field, action, tableID))
 }
 

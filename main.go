@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -103,7 +103,7 @@ func main() {
 }
 
 func showStatus() {
-	fmt.Println(
+	log.Println(
 		"\n===================================" +
 			"\nAPP         : " + utils.AppConfig.APPName +
 			"\nRunning On  : HTTP      " + utils.AppConfig.Server.Host + ":" + utils.AppConfig.Server.Port +
