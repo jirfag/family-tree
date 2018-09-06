@@ -27,6 +27,7 @@ func fetchUsersByIDs(IDs []uint64) (resp interface{}, err error) {
 	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).All(&res)
 
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Fatal("fetchDetailByUsername: ", err)
 	}
 	return res, err

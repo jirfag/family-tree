@@ -17,12 +17,14 @@ Service|URL
 ---|---
 Frontend | <https://fmt.hustunique.com>
 Backend | <https://fmt.fredliang.cn>
+GraphQL | <https://fmt.fredliang.cn/graphql>
 
 ## 3. Develope & Deploy
 
-1. Edit `config.example.yml` and save it as `config.yml` for develope usage.
-2. Then edit `config.example.yml` and save it as `config.deploy.yml` for deploy usage.
-3. When deploying, mv `config.deploy.yml` to the same folder with your binary file you've built.
+1. Please make sure your `go version` >= 1.11
+2. Edit `config.example.yml` and save it as `config.yml` for develope usage.
+3. Then edit `config.example.yml` and save it as `config.deploy.yml` for deploy usage.
+4. When deploying, mv `config.deploy.yml` to the same folder with your binary file you've built.
 
 ## 4. Project Structure
 ```shell

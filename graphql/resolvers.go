@@ -33,6 +33,7 @@ func GetCompany(params graphql.ResolveParams) (interface{}, error) {
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Find(p).All(&res)
 
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Get Company: ", err)
 		return nil, nil
 	}
@@ -64,6 +65,7 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).All(&res)
 
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("GetUser: ", err)
 		return nil, nil
 	}
@@ -100,6 +102,7 @@ func GetGroup(params graphql.ResolveParams) (interface{}, error) {
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Find(p).All(&res)
 
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Get Group: ", err)
 		return nil, nil
 	}
@@ -143,6 +146,7 @@ func GetProject(params graphql.ResolveParams) (interface{}, error) {
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("project").Find(p).All(&res)
 
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Get Project: ", err)
 		return nil, nil
 	}
@@ -201,6 +205,7 @@ func AddProject(params graphql.ResolveParams) (interface{}, error) {
 	// update company
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Insert(res)
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Add Company: ", err)
 	}
 
@@ -256,6 +261,7 @@ func AddCompany(params graphql.ResolveParams) (interface{}, error) {
 	// update company
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Insert(res)
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Add Company: ", err)
 	}
 
@@ -321,6 +327,7 @@ func AddGroup(params graphql.ResolveParams) (interface{}, error) {
 	// update user
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Insert(res)
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Add Group: ", err)
 	}
 
@@ -348,6 +355,7 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 	// check user exist
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).One(&p)
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Update User: ", err)
 		return nil, err
 	}
@@ -457,6 +465,7 @@ func UpdateGroup(params graphql.ResolveParams) (interface{}, error) {
 	// check user exist
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Find(p).One(&p)
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Update Group error: ", err)
 		return nil, err
 	}
@@ -541,6 +550,7 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Find(p).One(&p)
 
 	if err != nil {
+		raven.CaptureError(err, nil)
 		log.Println("Update Company error: ", err)
 		return nil, err
 	}

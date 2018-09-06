@@ -1,9 +1,10 @@
 package db
 
 import (
+	"log"
+
 	t "github.com/fredliang44/family-tree/graphql/types"
 	"github.com/fredliang44/family-tree/utils"
-	"log"
 
 	"github.com/go-redis/redis"
 )
