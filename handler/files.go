@@ -73,6 +73,7 @@ func FilesCallBackHandler(c *gin.Context) {
 
 	buf, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
+		c.JSON(http.StatusNotAcceptable, utils.ErrResp{Code: http.StatusNotAcceptable, Message: err.Error()})
 		log.Print("bodyErr ", err.Error())
 		return
 	}
