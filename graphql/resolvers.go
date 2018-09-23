@@ -57,9 +57,19 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 	if isOK {
 		p["phone"] = phone
 	}
-	school, isOK := params.Args["email"].(string)
+	email, isOK := params.Args["email"].(string)
 	if isOK {
-		p["email"] = school
+		p["email"] = email
+	}
+
+	joinedYear, isOK := params.Args["joinedYear"].(int)
+	if isOK {
+		p["joinedYear"] = joinedYear
+	}
+
+	enrollmentYear, isOK := params.Args["enrollmentYear"].(int)
+	if isOK {
+		p["enrollmentYear"] = enrollmentYear
 	}
 
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("user").Find(p).All(&res)

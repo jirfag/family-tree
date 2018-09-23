@@ -9,6 +9,8 @@ type Query {
 		username: String # unique
 		phone: String # unique
 		email: String # unique
+		joinedYear: Int
+		enrollmentYear: Int
 	): [User]
 	group(
 		id: Int # unique
@@ -106,6 +108,8 @@ type User {
 	wechat: String
 	location: String
 	verifyCode: String
+	joinedYear: int
+	enrollmentYear: int
 	createdTime: String # 2018-05-06 18:49:48.032 +0800 CST
 	position: String
 	isGraduated: Boolean

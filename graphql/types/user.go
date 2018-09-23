@@ -17,7 +17,9 @@ type User struct {
 	Location         string    `bson:"location" json:"location"`
 	VerifyCode       string    `bson:"verifyCode" json:"verifyCode"`
 	CreatedTime      time.Time `bson:"createdTime" json:"createdTime"` // Created time
-	Position         string    `bson:"position" json:"position"`       // Position in company
+	JoinedYear       int       `bson:"joinedYear" json:"joinedYear"`
+	EnrollmentYear   int       `bson:"enrollmentYear" json:"enrollmentYear"`
+	Position         string    `bson:"position" json:"position"` // Position in company
 	IsGraduated      bool      `bson:"isGraduated" json:"isGraduated"`
 	IsActivated      bool      `bson:"isActivated" json:"isActivated"` // Account was activated via verify code
 	IsValidated      bool      `bson:"isValidated" json:"isValidated"` // Account was validated by admin

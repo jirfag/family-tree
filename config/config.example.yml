@@ -1,4 +1,4 @@
-appname: open.fredliang.cn
+appname: Family Tree
 
 server:
   host: 127.0.0.1
@@ -39,4 +39,4 @@ root:
   password: password
 
 sentry:
-  sdn: https://xxxxxxxxxxxxxxx@sentry.io/xxxxxxxxxxx
+  sdn: https://xxxxxxxxxxxxxxx@sentry.io/xxxxxxxxxxx/app/config

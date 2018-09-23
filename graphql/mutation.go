@@ -120,6 +120,8 @@ var updateUser = graphql.Field{
 		"loaction":         &graphql.ArgumentConfig{Type: graphql.String},
 		"verifyCode":       &graphql.ArgumentConfig{Type: graphql.String},
 		"createdTime":      &graphql.ArgumentConfig{Type: graphql.String},
+		"joinedYear":       &graphql.ArgumentConfig{Type: graphql.Int},
+		"enrollmentYear":   &graphql.ArgumentConfig{Type: graphql.Int},
 		"isGraduated":      &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"IsActivated":      &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"IsBasicCompleted": &graphql.ArgumentConfig{Type: graphql.Boolean},

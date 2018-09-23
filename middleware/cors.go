@@ -35,7 +35,7 @@ func loadConfig() cors.Config {
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if gin.Mode() == "release" {
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "https://fmt.hustunique.com")
+			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		} else {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		}

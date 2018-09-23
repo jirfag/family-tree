@@ -22,10 +22,12 @@ var queryUser = graphql.Field{
 	Type:        graphql.NewList(userType),
 
 	Args: graphql.FieldConfigArgument{
-		"id":       &graphql.ArgumentConfig{Type: graphql.Int},
-		"username": &graphql.ArgumentConfig{Type: graphql.String},
-		"phone":    &graphql.ArgumentConfig{Type: graphql.String},
-		"email":    &graphql.ArgumentConfig{Type: graphql.String},
+		"id":             &graphql.ArgumentConfig{Type: graphql.Int},
+		"username":       &graphql.ArgumentConfig{Type: graphql.String},
+		"phone":          &graphql.ArgumentConfig{Type: graphql.String},
+		"email":          &graphql.ArgumentConfig{Type: graphql.String},
+		"joinedYear":     &graphql.ArgumentConfig{Type: graphql.Int},
+		"enrollmentYear": &graphql.ArgumentConfig{Type: graphql.Int},
 	},
 	Resolve: GetUser,
 }
