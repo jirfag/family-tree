@@ -137,3 +137,29 @@ var projectType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
+var companyType = graphql.NewObject(graphql.ObjectConfig{
+	Name:        "Company Type",
+	Description: "Company Type",
+	Fields: graphql.Fields{
+		"id":          &graphql.Field{Type: graphql.Int},
+		"name":        &graphql.Field{Type: graphql.String},
+		"description": &graphql.Field{Type: graphql.String},
+		"logo":        &graphql.Field{Type: graphql.String},
+		"creatorID":   &graphql.Field{Type: graphql.Int},
+		"images": &graphql.Field{
+			Name: "images Type",
+			Type: graphql.NewList(graphql.String),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.Project).Images, nil
+			},
+		},
+		"memberIDs": &graphql.Field{
+			Name: "memberIDs Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.Project).MemberIDs, nil
+			},
+		},
+	},
+})

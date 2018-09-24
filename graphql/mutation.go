@@ -109,7 +109,6 @@ var updateUser = graphql.Field{
 	Description: "Mutate user",
 	Type:        graphql.NewNonNull(userType),
 	Args: graphql.FieldConfigArgument{
-		"id":               &graphql.ArgumentConfig{Type: graphql.String},
 		"password":         &graphql.ArgumentConfig{Type: graphql.String},
 		"username":         &graphql.ArgumentConfig{Type: graphql.String},
 		"realname":         &graphql.ArgumentConfig{Type: graphql.String},
@@ -132,4 +131,23 @@ var updateUser = graphql.Field{
 		},
 	},
 	Resolve: UpdateUser,
+}
+
+var updateCompany = graphql.Field{
+	Name:        "Company",
+	Description: "Mutate company",
+	Type:        graphql.NewNonNull(companyType),
+	Args: graphql.FieldConfigArgument{
+		"name":        &graphql.ArgumentConfig{Type: graphql.String},
+		"description": &graphql.ArgumentConfig{Type: graphql.String},
+		"logo":        &graphql.ArgumentConfig{Type: graphql.String},
+		"creatorID":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"images": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.String),
+		},
+		"memberIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+	},
+	Resolve: UpdateCompany,
 }

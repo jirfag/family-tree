@@ -76,7 +76,6 @@ type Mutation {
     memberIDs: [Int]
   ): Group
   updateUser(
-    id: Int!
     username: String!
     realname: String
     email: String
@@ -114,8 +113,8 @@ type User {
   createdTime: String # 2018-05-06 18:49:48.032 +0800 CST
   position: String
   isGraduated: Boolean
-  isActivated: Boolean
-  isValidated: Boolean # Whether user submitted right verify code
+  isActivated: Boolean # Account was activated via verify code
+  isValidated: Boolean # Account was validated by admin
   isBasicCompleted: Boolean
   isAdmin: Boolean # Whether user is admin
   abilities: [String]

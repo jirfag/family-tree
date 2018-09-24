@@ -581,6 +581,11 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 	if isOK {
 		p["logo"] = logo
 	}
+	creatorID, isOK := params.Args["creatorID"].(int)
+	if isOK {
+		p["creatorID"] = creatorID
+	}
+
 	images, isOK := params.Args["images"].([]interface{})
 	if isOK {
 		var tmp = []string{}
@@ -589,10 +594,6 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 			tmp = append(tmp, images[i].(string))
 		}
 		p["images"] = tmp
-	}
-	creatorID, isOK := params.Args["creatorID"].(int)
-	if isOK {
-		p["creatorID"] = creatorID
 	}
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
 	if isOK {
