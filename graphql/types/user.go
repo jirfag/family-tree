@@ -13,6 +13,7 @@ type User struct {
 	Email            string    `bson:"email" json:"email"`
 	Phone            string    `bson:"phone" json:"phone"`
 	Avatar           string    `bson:"avatar" json:"avatar"`
+	Gender           bool      `bson:"gender" json:"gender"`
 	Wechat           string    `bson:"wechat" json:"wechat"`
 	Location         string    `bson:"location" json:"location"`
 	VerifyCode       string    `bson:"verifyCode" json:"verifyCode"`

@@ -1,165 +1,166 @@
 type schema {
-	query: Query
-	mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type Query {
-	user(
-		id: Int # unique
-		username: String # unique
-		phone: String # unique
-		email: String # unique
-		joinedYear: Int
-		enrollmentYear: Int
-	): [User]
-	group(
-		id: Int # unique
-		groupName: String
-		startYear: Int
-		endYear: Int
-		fromGroupID: Int
-		createdTime: String
-	): [Group]
-	company(
-		id: Int # unique
-		name: String # unique
-	): [Company]
+  user(
+    id: Int # unique
+    username: String # unique
+    phone: String # unique
+    email: String # unique
+    joinedYear: Int
+    enrollmentYear: Int
+  ): [User]
+  group(
+    id: Int # unique
+    groupName: String
+    startYear: Int
+    endYear: Int
+    fromGroupID: Int
+    createdTime: String
+  ): [Group]
+  company(
+    id: Int # unique
+    name: String # unique
+  ): [Company]
 }
 
 type Mutation {
-	addCompany(
-		name: String!
-		description: String
-		logo: String # image URL
-		images: [String] # image URL
-		creatorID: Int
-		memberIDs: [Int]
-	): Company
-	addProject(
-		title: String!
-		description: String
-		startedYear: String
-		endedYear: String
-		adminID: Int!
-		github: String
-		logo: String # image URL
-		images: [String] # image URL
-		files: [String] # files URL
-		memberIDs: [Int]
-		roles: [String]
-	): Project
-	addGroup(
-		groupName: String!
-		startYear: Int!
-		endYear: Int!
-		fromGroupID: Int!
-		toGroupID: int!
-		memberIDs: [Int]
-	): Group
-	updateCompany(
-		name: String!
-		description: String
-		logo: String # image URL
-		images: [String] # image URL
-		creatorID: Int
-		memberIDs: [Int]
-	): Company
-	updateGroup(
-		id: Int!
-		groupName: String
-		startYear: Int
-		endYear: Int
-		createdTime: String
-		leaderIDs: [Int]
-		fromGroupID: Int
-		toGroupIDs: [Int]
-		memberIDs: [Int]
-	): Group
-	updateUser(
-		id: Int!
-		username: String!
-		realname: String
-		email: String
-		phone: String
-		avatar: String
-		wechat: String
-		loaction: String
-		verifyCode: String
-		createdTime: String
-		isGraduated: Boolean
-		isActivated: Boolean
-		isBasicCompleted: Boolean
-		isAdmin: Boolean
-		projectIDs: [Project]
-		mentorIDs: [Int]
-		menteeIDs: [Int]
-		groupIDs: [int]
-	): User
+  addCompany(
+    name: String!
+    description: String
+    logo: String # image URL
+    images: [String] # image URL
+    creatorID: Int
+    memberIDs: [Int]
+  ): Company
+  addProject(
+    title: String!
+    description: String
+    startedYear: String
+    endedYear: String
+    adminID: Int!
+    github: String
+    logo: String # image URL
+    images: [String] # image URL
+    files: [String] # files URL
+    memberIDs: [Int]
+    roles: [String]
+  ): Project
+  addGroup(
+    groupName: String!
+    startYear: Int!
+    endYear: Int!
+    fromGroupID: Int!
+    toGroupID: int!
+    memberIDs: [Int]
+  ): Group
+  updateCompany(
+    name: String!
+    description: String
+    logo: String # image URL
+    images: [String] # image URL
+    creatorID: Int
+    memberIDs: [Int]
+  ): Company
+  updateGroup(
+    id: Int!
+    groupName: String
+    startYear: Int
+    endYear: Int
+    createdTime: String
+    leaderIDs: [Int]
+    fromGroupID: Int
+    toGroupIDs: [Int]
+    memberIDs: [Int]
+  ): Group
+  updateUser(
+    id: Int!
+    username: String!
+    realname: String
+    email: String
+    phone: String
+    avatar: String
+    wechat: String
+    loaction: String
+    verifyCode: String
+    createdTime: String
+    isGraduated: Boolean
+    isActivated: Boolean
+    isBasicCompleted: Boolean
+    isAdmin: Boolean
+    projectIDs: [Project]
+    mentorIDs: [Int]
+    menteeIDs: [Int]
+    groupIDs: [int]
+  ): User
 }
 
 type User {
-	id: Int!
-	password: String! # min=3, max=30, one lower case, one digit number
-	username: String! # min=3,max=20
-	realname: String
-	email: String
-	phone: String
-	avatar: String
-	wechat: String
-	location: String
-	verifyCode: String
-	joinedYear: int
-	enrollmentYear: int
-	createdTime: String # 2018-05-06 18:49:48.032 +0800 CST
-	position: String
-	isGraduated: Boolean
-	isActivated: Boolean
-	isValidated: Boolean
-	isBasicCompleted: Boolean
-	isAdmin: Boolean
-	abilities: [String]
-	projectIDs: [Project]
-	mentorIDs: [Int]
-	menteeIDs: [Int]
-	groupIDs: [int]
-	companyIDs: [int]
+  id: Int!
+  password: String! # min=3, max=30, one lower case, one digit number
+  username: String! # min=3,max=20
+  realname: String
+  email: String
+  phone: String
+  avatar: String
+  gender: bool # male = true; female = false;
+  wechat: String
+  location: String
+  verifyCode: String
+  joinedYear: int
+  enrollmentYear: int
+  createdTime: String # 2018-05-06 18:49:48.032 +0800 CST
+  position: String
+  isGraduated: Boolean
+  isActivated: Boolean
+  isValidated: Boolean # Whether user submitted right verify code
+  isBasicCompleted: Boolean
+  isAdmin: Boolean # Whether user is admin
+  abilities: [String]
+  projectIDs: [Int]
+  mentorIDs: [Int]
+  menteeIDs: [Int]
+  groupIDs: [int]
+  companyIDs: [int]
 }
 
 type Group {
-	id: Int!
-	groupName: String!
-	startYear: Int!
-	endYear: Int! # 0 stands for up to now
-	createdTime: String! # 2018-05-06 18:49:48.032 +0800 CST
-	logo:string!
-	leaderIDs: [Int]
-	fromGroupID: Int! # 0 stands for none
-	toGroupIDs: [int]
-	memberIDs: [Int]
+  id: Int!
+  groupName: String!
+  startYear: Int!
+  endYear: Int! # 0 stands for up to now
+  createdTime: String! # 2018-05-06 18:49:48.032 +0800 CST
+  logo:string!
+  leaderIDs: [Int]
+  fromGroupID: Int! # 0 stands for none
+  toGroupIDs: [int]
+  memberIDs: [Int]
 }
 
 type Project {
-	id: Int!
-	title: String!
-	description: String
-	startedTime: String
-	endedTime: String
-	adminID: Int!
-	github: String
-	logo: String # image URL
-	images: [String] # image URL
-	files: [String] # files URL
-	memberIDs: [Int]
-	roles: [String]
-	createdTime: String!
+  id: Int!
+  title: String!
+  description: String
+  startedTime: String
+  endedTime: String
+  adminID: Int!
+  github: String
+  logo: String # image URL
+  images: [String] # image URL
+  files: [String] # files URL
+  memberIDs: [Int]
+  roles: [String]
+  createdTime: String!
 }
 
 type Company {
-	id: Int!
-	name: String!
-	description: String
-	logo: String # image URL
-	images: [String] # image URL
-	creatorID: Int
-	memberIDs: [Int]
+  id: Int!
+  name: String!
+  description: String
+  logo: String # image URL
+  images: [String] # image URL
+  creatorID: Int
+  memberIDs: [Int]
 }

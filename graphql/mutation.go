@@ -116,6 +116,7 @@ var updateUser = graphql.Field{
 		"email":            &graphql.ArgumentConfig{Type: graphql.String},
 		"phone":            &graphql.ArgumentConfig{Type: graphql.String},
 		"avatar":           &graphql.ArgumentConfig{Type: graphql.String},
+		"gender":           &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"wechat":           &graphql.ArgumentConfig{Type: graphql.String},
 		"loaction":         &graphql.ArgumentConfig{Type: graphql.String},
 		"verifyCode":       &graphql.ArgumentConfig{Type: graphql.String},
