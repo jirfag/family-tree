@@ -2,7 +2,6 @@ package graphql
 
 import (
 	"errors"
-
 	"github.com/fredliang44/family-tree/db"
 	t "github.com/fredliang44/family-tree/graphql/types"
 	"github.com/fredliang44/family-tree/middleware"
@@ -22,14 +21,16 @@ func GetCompany(params graphql.ResolveParams) (interface{}, error) {
 	var res []t.Company
 	var p = bson.M{}
 
-	id, isOK := params.Args["id"].(uint64)
+	id, isOK := params.Args["id"].(int)
 	if isOK {
-		p["id"] = id
+		p["_id"] = id
 	}
+
 	name, isOK := params.Args["name"].(string)
 	if isOK {
 		p["name"] = name
 	}
+
 	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Find(p).All(&res)
 
 	if err != nil {
@@ -45,10 +46,12 @@ func GetUser(params graphql.ResolveParams) (interface{}, error) {
 	var res []t.User
 	var p = bson.M{}
 
-	id, isOK := params.Args["id"].(uint64)
+	id, isOK := params.Args["id"].(int)
+
 	if isOK {
-		p["id"] = id
+		p["_id"] = id
 	}
+
 	username, isOK := params.Args["username"].(string)
 	if isOK {
 		p["username"] = username
@@ -87,9 +90,9 @@ func GetGroup(params graphql.ResolveParams) (interface{}, error) {
 	var res []t.Group
 	var p = bson.M{}
 
-	id, isOK := params.Args["id"].(uint64)
+	id, isOK := params.Args["id"].(int)
 	if isOK {
-		p["id"] = id
+		p["_id"] = id
 	}
 
 	groupName, isOK := params.Args["groupName"].(string)
@@ -104,7 +107,7 @@ func GetGroup(params graphql.ResolveParams) (interface{}, error) {
 	if isOK {
 		p["endYear"] = endYear
 	}
-	fromGroupID, isOK := params.Args["fromGroupID"].(uint64)
+	fromGroupID, isOK := params.Args["fromGroupID"].(int)
 	if isOK {
 		p["fromGroupID"] = fromGroupID
 	}
@@ -124,9 +127,9 @@ func GetProject(params graphql.ResolveParams) (interface{}, error) {
 	var res []t.Project
 	var p = bson.M{}
 
-	id, isOK := params.Args["id"].(uint64)
+	id, isOK := params.Args["id"].(int)
 	if isOK {
-		p["id"] = id
+		p["_id"] = id
 	}
 
 	title, isOK := params.Args["title"].(string)
@@ -190,7 +193,7 @@ func AddProject(params graphql.ResolveParams) (interface{}, error) {
 
 	images, isOK := params.Args["images"].([]interface{})
 	if isOK {
-		var tmp = []string{}
+		var tmp []string
 		for i := range images {
 			log.Println("images[i]", images[i])
 			tmp = append(tmp, images[i].(string))
@@ -198,9 +201,9 @@ func AddProject(params graphql.ResolveParams) (interface{}, error) {
 		res.Images = tmp
 	}
 
-	adminID, isOK := params.Args["adminID"].(uint64)
+	adminID, isOK := params.Args["adminID"].(int)
 	if isOK {
-		res.AdminID = adminID
+		res.AdminID = uint64(adminID)
 	}
 
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
@@ -246,7 +249,7 @@ func AddCompany(params graphql.ResolveParams) (interface{}, error) {
 
 	images, isOK := params.Args["images"].([]interface{})
 	if isOK {
-		var tmp = []string{}
+		var tmp []string
 		for i := range images {
 			log.Println("images[i]", images[i])
 			tmp = append(tmp, images[i].(string))
@@ -254,9 +257,9 @@ func AddCompany(params graphql.ResolveParams) (interface{}, error) {
 		res.Images = tmp
 	}
 
-	creatorID, isOK := params.Args["creatorID"].(uint64)
+	creatorID, isOK := params.Args["creatorID"].(int)
 	if isOK {
-		res.CreatorID = creatorID
+		res.CreatorID = uint64(creatorID)
 	}
 
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
@@ -301,9 +304,9 @@ func AddGroup(params graphql.ResolveParams) (interface{}, error) {
 		res.EndYear = endYear
 	}
 
-	fromGroupID, isOK := params.Args["fromGroupID"].(uint64)
+	fromGroupID, isOK := params.Args["fromGroupID"].(int)
 	if isOK {
-		res.FromGroupID = fromGroupID
+		res.FromGroupID = uint64(fromGroupID)
 	}
 
 	leaderIDs, isOK := params.Args["leaderIDs"].([]interface{})
@@ -357,9 +360,9 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 	}
 
 	// load params
-	id, isOK := params.Args["username"].(uint64)
+	id, isOK := params.Args["username"].(int)
 	if isOK && id != 0 {
-		p["id"] = id
+		p["_id"] = id
 	}
 
 	// check user exist
@@ -374,7 +377,7 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 		// load data
 		id, isOK := params.Args["id"].(bson.ObjectId)
 		if isOK {
-			p["id"] = id
+			p["_id"] = id
 		}
 		password, isOK := params.Args["password"].(string)
 		if isOK {
@@ -457,7 +460,7 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 		bson.Unmarshal(bsonBytes, &res)
 		return res, nil
 	}
-	return nil, errors.New("You Couldn't Change other's info")
+	return nil, errors.New("you can't change other's info")
 }
 
 // UpdateGroup is a graphql resolver to update group info
@@ -467,9 +470,9 @@ func UpdateGroup(params graphql.ResolveParams) (interface{}, error) {
 	var p = bson.M{}
 
 	// load params
-	id, isOK := params.Args["id"].(uint64)
+	id, isOK := params.Args["id"].(int)
 	if isOK && id != 0 {
-		p["id"] = id
+		p["_id"] = id
 	}
 
 	// check user exist
@@ -494,37 +497,37 @@ func UpdateGroup(params graphql.ResolveParams) (interface{}, error) {
 		p["endYear"] = endYear
 	}
 
-	fromGroupID, isOK := params.Args["fromGroupID"].(uint64)
+	fromGroupID, isOK := params.Args["fromGroupID"].(int)
 	if isOK {
 		p["fromGroupID"] = fromGroupID
 	}
 
 	toGroupID, isOK := params.Args["toGroupID"].([]interface{})
 	if isOK {
-		var tmp = []uint64{}
+		var tmp []int
 		for i := range toGroupID {
 			log.Println("toGroupID[i]", toGroupID[i])
-			tmp = append(tmp, toGroupID[i].(uint64))
+			tmp = append(tmp, toGroupID[i].(int))
 		}
 		p["toGroupID"] = tmp
 	}
 
 	leaderIDs, isOK := params.Args["leaderIDs"].([]interface{})
 	if isOK {
-		var tmp = []uint64{}
+		var tmp []int
 		for i := range leaderIDs {
 			log.Println("leaderIDs[i]", leaderIDs[i])
-			tmp = append(tmp, leaderIDs[i].(uint64))
+			tmp = append(tmp, leaderIDs[i].(int))
 		}
 		p["leaderIDs"] = tmp
 	}
 
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
 	if isOK {
-		var tmp = []uint64{}
+		var tmp []int
 		for i := range memberIDs {
 			log.Println("memberIDs[i]", memberIDs[i])
-			tmp = append(tmp, memberIDs[i].(uint64))
+			tmp = append(tmp, memberIDs[i].(int))
 		}
 		p["memberIDs"] = tmp
 	}
@@ -551,9 +554,9 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 	var p = bson.M{}
 
 	// load params
-	id, isOK := params.Args["id"].(uint64)
+	id, isOK := params.Args["id"].(int)
 	if isOK && id != 0 {
-		p["id"] = id
+		p["_id"] = id
 	}
 
 	// check user exist
@@ -587,16 +590,16 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 		}
 		p["images"] = tmp
 	}
-	creatorID, isOK := params.Args["creatorID"].(uint64)
+	creatorID, isOK := params.Args["creatorID"].(int)
 	if isOK {
 		p["creatorID"] = creatorID
 	}
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
 	if isOK {
-		var tmp = []uint64{}
+		var tmp []int
 		for i := range memberIDs {
 			log.Println("memberIDs[i]", memberIDs[i])
-			tmp = append(tmp, memberIDs[i].(uint64))
+			tmp = append(tmp, memberIDs[i].(int))
 		}
 		p["leaderIDs"] = tmp
 	}
