@@ -146,7 +146,13 @@ var companyType = graphql.NewObject(graphql.ObjectConfig{
 		"name":        &graphql.Field{Type: graphql.String},
 		"description": &graphql.Field{Type: graphql.String},
 		"logo":        &graphql.Field{Type: graphql.String},
-		"creatorID":   &graphql.Field{Type: graphql.Int},
+		"adminIDs": &graphql.Field{
+			Name: "adminIDs Type",
+			Type: graphql.NewList(graphql.Int),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return p.Source.(t.User).ID, nil
+			},
+		},
 		"images": &graphql.Field{
 			Name: "images Type",
 			Type: graphql.NewList(graphql.String),

@@ -141,7 +141,7 @@ var updateCompany = graphql.Field{
 		"name":        &graphql.ArgumentConfig{Type: graphql.String},
 		"description": &graphql.ArgumentConfig{Type: graphql.String},
 		"logo":        &graphql.ArgumentConfig{Type: graphql.String},
-		"creatorID":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"adminIDs":    &graphql.ArgumentConfig{Type: graphql.Int},
 		"images": &graphql.ArgumentConfig{
 			Type: graphql.NewList(graphql.String),
 		},

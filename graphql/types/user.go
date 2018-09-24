@@ -14,19 +14,19 @@ type User struct {
 	Phone            string    `bson:"phone" json:"phone"`
 	Avatar           string    `bson:"avatar" json:"avatar"`
 	Gender           bool      `bson:"gender" json:"gender"`
-	Wechat           string    `bson:"wechat" json:"wechat"`
-	Location         string    `bson:"location" json:"location"`
+	Wechat           string    `bson:"wechat" json:"wechat"`     // Wechat ID
+	Location         string    `bson:"location" json:"location"` // Current Location (City)
 	VerifyCode       string    `bson:"verifyCode" json:"verifyCode"`
-	CreatedTime      time.Time `bson:"createdTime" json:"createdTime"` // Created time
-	JoinedYear       int       `bson:"joinedYear" json:"joinedYear"`
-	EnrollmentYear   int       `bson:"enrollmentYear" json:"enrollmentYear"`
-	Position         string    `bson:"position" json:"position"` // Position in company
-	IsGraduated      bool      `bson:"isGraduated" json:"isGraduated"`
-	IsActivated      bool      `bson:"isActivated" json:"isActivated"` // Account was activated via verify code
-	IsValidated      bool      `bson:"isValidated" json:"isValidated"` // Account was validated by admin
-	IsBasicCompleted bool      `bson:"isBasicCompleted" json:"isBasicCompleted"`
+	CreatedTime      time.Time `bson:"createdTime" json:"createdTime"`           // Created time
+	JoinedYear       int       `bson:"joinedYear" json:"joinedYear"`             // When joined Unique Studio
+	EnrollmentYear   int       `bson:"enrollmentYear" json:"enrollmentYear"`     // When entered school
+	Position         string    `bson:"position" json:"position"`                 // Position in company
+	IsGraduated      bool      `bson:"isGraduated" json:"isGraduated"`           // Whether graduated
+	IsActivated      bool      `bson:"isActivated" json:"isActivated"`           // Account was activated via verify code
+	IsValidated      bool      `bson:"isValidated" json:"isValidated"`           // Account was validated by admin
+	IsBasicCompleted bool      `bson:"isBasicCompleted" json:"isBasicCompleted"` // Whether account basic info completed
 	IsAdmin          bool      `bson:"isAdmin" json:"isAdmin"`
-	Abilities        []string  `bson:"abilities" json:"abilities"`
+	Abilities        []string  `bson:"abilities" json:"abilities"` // User Abilities; EX: Python
 	ProjectIDs       []uint64  `bson:"projectIDs" json:"projectIDs"`
 	MentorIDs        []uint64  `bson:"mentorIDs" json:"mentorIDs"`
 	MenteeIDs        []uint64  `bson:"menteeIDs" json:"menteeIDs"`

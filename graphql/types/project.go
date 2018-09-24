@@ -12,10 +12,10 @@ type Project struct {
 	StartedYear string    `bson:"startedYear" json:"startedYear "`
 	EndedYear   string    `bson:"endedYear" json:"endedYear "`
 	AdminID     uint64    `bson:"adminID" json:"adminID"`
-	Github      string    `bson:"github" json:"github"`
+	Github      string    `bson:"github" json:"github"` // github id
 	Logo        string    `bson:"logo" json:"logo"`
-	Images      []string  `bson:"image" json:"image"`
-	Files       []string  `bson:"files" json:"files"` // url
+	Images      []string  `bson:"image" json:"image"` // url of images
+	Files       []string  `bson:"files" json:"files"` // url of files
 	MemberIDs   []uint64  `bson:"memberIDs" json:"memberIDs"`
 	Roles       []string  `bson:"roles" json:"roles"`
 	CreatedTime time.Time `bson:"createdTime" json:"createdTime"`

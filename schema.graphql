@@ -32,7 +32,7 @@ type Mutation {
     description: String
     logo: String # image URL
     images: [String] # image URL
-    creatorID: Int
+    adminIDs: [Int]
     memberIDs: [Int]
   ): Company
   addProject(
@@ -61,7 +61,7 @@ type Mutation {
     description: String
     logo: String # image URL
     images: [String] # image URL
-    creatorID: Int
+    adminIDs: [Int]
     memberIDs: [Int]
   ): Company
   updateGroup(
@@ -160,6 +160,6 @@ type Company {
   description: String
   logo: String # image URL
   images: [String] # image URL
-  creatorID: Int
+  adminIDs: [Int]
   memberIDs: [Int]
 }
