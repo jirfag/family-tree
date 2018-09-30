@@ -116,7 +116,7 @@ var updateUser = graphql.Field{
 		"avatar":           &graphql.ArgumentConfig{Type: graphql.String},
 		"gender":           &graphql.ArgumentConfig{Type: graphql.Boolean},
 		"wechat":           &graphql.ArgumentConfig{Type: graphql.String},
-		"loaction":         &graphql.ArgumentConfig{Type: graphql.String},
+		"location":         &graphql.ArgumentConfig{Type: graphql.String},
 		"verifyCode":       &graphql.ArgumentConfig{Type: graphql.String},
 		"createdTime":      &graphql.ArgumentConfig{Type: graphql.String},
 		"joinedYear":       &graphql.ArgumentConfig{Type: graphql.Int},

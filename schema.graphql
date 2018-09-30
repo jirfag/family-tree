@@ -82,7 +82,7 @@ type Mutation {
     phone: String
     avatar: String
     wechat: String
-    loaction: String
+    location: String
     verifyCode: String
     createdTime: String
     isGraduated: Boolean

@@ -377,7 +377,7 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 		return nil, err
 	}
 
-	if params.Context.Value("User").(string) == username {
+	if (params.Context.Value("User").(string) == username) || (db.CheckAdminByUsername(params.Context.Value("User").(string))) {
 		// load data
 		id, isOK := params.Args["id"].(bson.ObjectId)
 		if isOK {
@@ -407,15 +407,14 @@ func UpdateUser(params graphql.ResolveParams) (interface{}, error) {
 		if isOK {
 			p["wechat"] = wechat
 		}
-		loaction, isOK := params.Args["loaction"].(string)
+		location, isOK := params.Args["location"].(string)
 		if isOK {
-			p["loaction"] = loaction
+			p["location"] = location
 		}
 		verifyCode, isOK := params.Args["verifyCode"].(string)
 		if isOK {
 			p["verifyCode"] = verifyCode
 		}
-
 		isGraduated, isOK := params.Args["isGraduated"].(bool)
 		if isOK {
 			p["isGraduated"] = isGraduated
@@ -548,12 +547,10 @@ func UpdateGroup(params graphql.ResolveParams) (interface{}, error) {
 	bsonBytes, _ := bson.Marshal(p)
 	bson.Unmarshal(bsonBytes, &res)
 	return res, nil
-
 }
 
 // UpdateCompany is a graphql resolver to update group info
 func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
-
 	var res t.Company
 	var p = bson.M{}
 
@@ -633,11 +630,91 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 	bsonBytes, _ := bson.Marshal(p)
 	bson.Unmarshal(bsonBytes, &res)
 	return res, nil
-
 }
 
 // TODO
 // UpdateProject is a graphql resolver to update project info
 func UpdateProject(params graphql.ResolveParams) (interface{}, error) {
+	var res t.Project
+	var p = bson.M{}
+
+	// load params
+	id, isOK := params.Args["id"].(int)
+	if isOK && id != 0 {
+		p["_id"] = id
+	}
+
+	// check user exist
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Find(p).One(&res)
+
+	// TODO Test Contains()
+	userID, err := db.FetchUserIDByUsername(params.Context.Value("User").(string))
+
+	if !(res.AdminID == userID) && !db.CheckAdminByUsername(params.Context.Value("User").(string)) {
+		return nil, errors.New("you have no permission to edit this project")
+	}
+
+	if err != nil {
+		raven.CaptureError(err, nil)
+		log.Println("Update Company error: ", err)
+		return nil, err
+	}
+
+	// load data
+	name, isOK := params.Args["name"].(string)
+	if isOK {
+		p["name"] = name
+	}
+	description, isOK := params.Args["description"].(string)
+	if isOK {
+		p["description"] = description
+	}
+	logo, isOK := params.Args["logo"].(string)
+	if isOK {
+		p["logo"] = logo
+	}
+
+	adminIDs, isOK := params.Args["adminIDs"].([]interface{})
+	if isOK {
+		var tmp []int
+		for i := range adminIDs {
+			log.Println("adminIDs[i]", adminIDs[i])
+			tmp = append(tmp, adminIDs[i].(int))
+		}
+		p["adminIDs"] = tmp
+	}
+
+	images, isOK := params.Args["images"].([]interface{})
+	if isOK {
+		var tmp = []string{}
+		for i := range images {
+			log.Println("images[i]", images[i])
+			tmp = append(tmp, images[i].(string))
+		}
+		p["images"] = tmp
+	}
+	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
+	if isOK {
+		var tmp []int
+		for i := range memberIDs {
+			log.Println("memberIDs[i]", memberIDs[i])
+			tmp = append(tmp, memberIDs[i].(int))
+		}
+		p["memberIDs"] = tmp
+	}
+
+	// update company
+	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Update(bson.M{"id": id}, p)
+	if err != nil {
+		raven.CaptureError(err, nil)
+		log.Println("Update Company: ", err)
+		return res, err
+	}
+
+	// return data
+	bsonBytes, _ := bson.Marshal(p)
+	bson.Unmarshal(bsonBytes, &res)
+	return res, nil
+
 	return nil, nil
 }

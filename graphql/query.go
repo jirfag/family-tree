@@ -38,7 +38,7 @@ var queryGroup = graphql.Field{
 	Type:        graphql.NewList(groupType),
 
 	Args: graphql.FieldConfigArgument{
-		"id":          &graphql.ArgumentConfig{Type: graphql.String},
+		"id":          &graphql.ArgumentConfig{Type: graphql.Int},
 		"groupName":   &graphql.ArgumentConfig{Type: graphql.String},
 		"startYear":   &graphql.ArgumentConfig{Type: graphql.Int},
 		"endYear":     &graphql.ArgumentConfig{Type: graphql.Int},

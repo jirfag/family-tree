@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// AuthMiddleware is a middleware for JWT 
 var AuthMiddleware = getAuthMiddleware()
 
 func getAuthMiddleware() *jwt.GinJWTMiddleware {
@@ -143,16 +144,17 @@ func authLogin(c *gin.Context) (interface{}, error) {
 	res, err := db.FetchUserFromMongo(username)
 	if err != nil {
 		log.Println("fetchUserFromMongo", err)
+		return nil, err
 	}
 
 	if res.IsActivated != true {
 		log.Println("IsActivated: ", err)
-		return nil, errors.New("Please verify your account")
+		return nil, errors.New("please verify your account")
 	}
 
 	if res.IsValidated != true {
 		log.Println("IsValidated: ", err)
-		return nil, errors.New("Please contact admin to validate your account")
+		return nil, errors.New("please contact admin to validate your account")
 	}
 
 	isOK := CheckPasswordHash(password, res.Password)
