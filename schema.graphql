@@ -12,6 +12,9 @@ type Query {
     joinedYear: Int
     enrollmentYear: Int
   ): [User]
+  project(
+    id: Int # unique
+  ):[Project]
   group(
     id: Int # unique
     groupName: String
