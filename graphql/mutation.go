@@ -15,21 +15,6 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-var addCompany = graphql.Field{
-	Name:        "Company",
-	Description: "Add Company",
-	Type:        graphql.NewNonNull(groupType),
-	Args: graphql.FieldConfigArgument{
-		"groupName": &graphql.ArgumentConfig{Type: graphql.String},
-		"startYear": &graphql.ArgumentConfig{Type: graphql.Int},
-		"endYear":   &graphql.ArgumentConfig{Type: graphql.Int},
-		"memberIDs": &graphql.ArgumentConfig{
-			Type: graphql.NewList(graphql.Int),
-		},
-	},
-	Resolve: AddCompany,
-}
-
 var addProject = graphql.Field{
 	Name:        "Project",
 	Description: "Add project",
@@ -78,6 +63,27 @@ var addGroup = graphql.Field{
 		},
 	},
 	Resolve: AddGroup,
+}
+
+var addCompany = graphql.Field{
+	Name:        "Company",
+	Description: "Add Company",
+	Type:        graphql.NewNonNull(companyType),
+	Args: graphql.FieldConfigArgument{
+		"name":        &graphql.ArgumentConfig{Type: graphql.String},
+		"description": &graphql.ArgumentConfig{Type: graphql.String},
+		"logo":        &graphql.ArgumentConfig{Type: graphql.String},
+		"adminIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+		"images": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.String),
+		},
+		"memberIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+	},
+	Resolve: AddCompany,
 }
 
 var updateGroup = graphql.Field{
@@ -132,25 +138,6 @@ var updateUser = graphql.Field{
 	Resolve: UpdateUser,
 }
 
-var updateCompany = graphql.Field{
-	Name:        "Company",
-	Description: "Mutate company",
-	Type:        graphql.NewNonNull(companyType),
-	Args: graphql.FieldConfigArgument{
-		"name":        &graphql.ArgumentConfig{Type: graphql.String},
-		"description": &graphql.ArgumentConfig{Type: graphql.String},
-		"logo":        &graphql.ArgumentConfig{Type: graphql.String},
-		"adminIDs":    &graphql.ArgumentConfig{Type: graphql.Int},
-		"images": &graphql.ArgumentConfig{
-			Type: graphql.NewList(graphql.String),
-		},
-		"memberIDs": &graphql.ArgumentConfig{
-			Type: graphql.NewList(graphql.Int),
-		},
-	},
-	Resolve: UpdateCompany,
-}
-
 var updateProject = graphql.Field{
 	Name:        "Project",
 	Description: "Mutate project",
@@ -177,4 +164,23 @@ var updateProject = graphql.Field{
 		},
 	},
 	Resolve: UpdateProject,
+}
+
+var updateCompany = graphql.Field{
+	Name:        "Company",
+	Description: "Mutate company",
+	Type:        graphql.NewNonNull(companyType),
+	Args: graphql.FieldConfigArgument{
+		"name":        &graphql.ArgumentConfig{Type: graphql.String},
+		"description": &graphql.ArgumentConfig{Type: graphql.String},
+		"logo":        &graphql.ArgumentConfig{Type: graphql.String},
+		"adminIDs":    &graphql.ArgumentConfig{Type: graphql.Int},
+		"images": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.String),
+		},
+		"memberIDs": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.Int),
+		},
+	},
+	Resolve: UpdateCompany,
 }

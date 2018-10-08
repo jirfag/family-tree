@@ -4,18 +4,6 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-var queryCompany = graphql.Field{
-	Name:        "Company",
-	Description: "Query company",
-	Type:        graphql.NewList(userType),
-
-	Args: graphql.FieldConfigArgument{
-		"id":   &graphql.ArgumentConfig{Type: graphql.Int},
-		"name": &graphql.ArgumentConfig{Type: graphql.String},
-	},
-	Resolve: GetCompany,
-}
-
 var queryUser = graphql.Field{
 	Name:        "User",
 	Description: "Query user",
@@ -53,9 +41,22 @@ var queryProject = graphql.Field{
 	Type:        graphql.NewList(projectType),
 
 	Args: graphql.FieldConfigArgument{
-		"id": &graphql.ArgumentConfig{Type: graphql.String},
+		"id":       &graphql.ArgumentConfig{Type: graphql.String},
+		"memberID": &graphql.ArgumentConfig{Type: graphql.Int},
 	},
 	Resolve: GetProject,
+}
+
+var queryCompany = graphql.Field{
+	Name:        "Company",
+	Description: "Query company",
+	Type:        graphql.NewList(companyType),
+
+	Args: graphql.FieldConfigArgument{
+		"id":   &graphql.ArgumentConfig{Type: graphql.Int},
+		"name": &graphql.ArgumentConfig{Type: graphql.String},
+	},
+	Resolve: GetCompany,
 }
 
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{

@@ -139,7 +139,7 @@ var projectType = graphql.NewObject(graphql.ObjectConfig{
 })
 
 var companyType = graphql.NewObject(graphql.ObjectConfig{
-	Name:        "Company Type",
+	Name:        "CompanyType",
 	Description: "Company Type",
 	Fields: graphql.Fields{
 		"id":          &graphql.Field{Type: graphql.Int},

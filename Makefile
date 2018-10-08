@@ -14,8 +14,8 @@ cov: test
 
 deploy: env
 	GOOS=linux GOARCH=amd64  go build -tags=jsoniter ./main.go && \
-    docker build -t $(DOCKER_REGISTRY)/fredliang/family-tree  .  && \
-    docker push $(DOCKER_REGISTRY)/fredliang/family-tree
+	docker build -t $(DOCKER_REGISTRY)/fredliang/family-tree  .  && \
+	docker push $(DOCKER_REGISTRY)/fredliang/family-tree
 
 clean:
 	rm -rf coverage.txt main docs
