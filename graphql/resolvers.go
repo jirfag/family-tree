@@ -136,6 +136,13 @@ func GetProject(params graphql.ResolveParams) (interface{}, error) {
 	if isOK {
 		p["title"] = title
 	}
+
+	// TODO check get item from mongo list is OK
+	memberID, isOK := params.Args["memberID"].(int)
+	if isOK {
+		p["memberIDs"] = bson.M{"$in": memberID}
+	}
+
 	description, isOK := params.Args["description"].(string)
 	if isOK {
 		p["description"] = description
@@ -182,11 +189,11 @@ func AddProject(params graphql.ResolveParams) (interface{}, error) {
 	if isOK {
 		res.Description = description
 	}
-	startedYear, isOK := params.Args["startedYear"].(string)
+	startedYear, isOK := params.Args["startedYear"].(int)
 	if isOK {
 		res.StartedYear = startedYear
 	}
-	endedYear, isOK := params.Args["endedYear"].(string)
+	endedYear, isOK := params.Args["endedYear"].(int)
 	if isOK {
 		res.EndedYear = endedYear
 	}
@@ -536,7 +543,7 @@ func UpdateGroup(params graphql.ResolveParams) (interface{}, error) {
 	}
 
 	// update group
-	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Update(bson.M{"id": id}, p)
+	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("group").Update(bson.M{"_id": id}, p)
 	if err != nil {
 		raven.CaptureError(err, nil)
 		log.Println("Update Group: ", err)
@@ -619,7 +626,7 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 	}
 
 	// update company
-	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Update(bson.M{"id": id}, p)
+	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Update(bson.M{"_id": id}, p)
 	if err != nil {
 		raven.CaptureError(err, nil)
 		log.Println("Update Company: ", err)
@@ -632,7 +639,6 @@ func UpdateCompany(params graphql.ResolveParams) (interface{}, error) {
 	return res, nil
 }
 
-// TODO
 // UpdateProject is a graphql resolver to update project info
 func UpdateProject(params graphql.ResolveParams) (interface{}, error) {
 	var res t.Project
@@ -645,7 +651,7 @@ func UpdateProject(params graphql.ResolveParams) (interface{}, error) {
 	}
 
 	// check user exist
-	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Find(p).One(&res)
+	err := db.DBSession.DB(utils.AppConfig.Mongo.DB).C("project").Find(p).One(&res)
 
 	// TODO Test Contains()
 	userID, err := db.FetchUserIDByUsername(params.Context.Value("User").(string))
@@ -656,43 +662,71 @@ func UpdateProject(params graphql.ResolveParams) (interface{}, error) {
 
 	if err != nil {
 		raven.CaptureError(err, nil)
-		log.Println("Update Company error: ", err)
+		log.Println("Update Project error: ", err)
 		return nil, err
 	}
 
 	// load data
-	name, isOK := params.Args["name"].(string)
+	title, isOK := params.Args["title"].(string)
 	if isOK {
-		p["name"] = name
+		p["title"] = title
 	}
+
 	description, isOK := params.Args["description"].(string)
 	if isOK {
 		p["description"] = description
 	}
+
+	startedYear, isOK := params.Args["startedYear"].(int)
+	if isOK {
+		p["startedYear"] = startedYear
+	}
+
+	endedYear, isOK := params.Args["endedYear"].(int)
+	if isOK {
+		p["endedYear"] = endedYear
+	}
+
+	url, isOK := params.Args["url"].(int)
+	if isOK {
+		p["url"] = url
+	}
+
+	adminID, isOK := params.Args["adminID"].(int)
+	if isOK {
+		p["adminID"] = adminID
+	}
+
+	github, isOK := params.Args["github"].(string)
+	if isOK {
+		p["github"] = github
+	}
+
 	logo, isOK := params.Args["logo"].(string)
 	if isOK {
 		p["logo"] = logo
 	}
 
-	adminIDs, isOK := params.Args["adminIDs"].([]interface{})
-	if isOK {
-		var tmp []int
-		for i := range adminIDs {
-			log.Println("adminIDs[i]", adminIDs[i])
-			tmp = append(tmp, adminIDs[i].(int))
-		}
-		p["adminIDs"] = tmp
-	}
-
 	images, isOK := params.Args["images"].([]interface{})
 	if isOK {
-		var tmp = []string{}
+		var tmp []string
 		for i := range images {
 			log.Println("images[i]", images[i])
 			tmp = append(tmp, images[i].(string))
 		}
 		p["images"] = tmp
 	}
+
+	files, isOK := params.Args["files"].([]interface{})
+	if isOK {
+		var tmp []string
+		for i := range files {
+			log.Println("files[i]", files[i])
+			tmp = append(tmp, files[i].(string))
+		}
+		p["files"] = tmp
+	}
+
 	memberIDs, isOK := params.Args["memberIDs"].([]interface{})
 	if isOK {
 		var tmp []int
@@ -703,11 +737,21 @@ func UpdateProject(params graphql.ResolveParams) (interface{}, error) {
 		p["memberIDs"] = tmp
 	}
 
-	// update company
-	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("company").Update(bson.M{"id": id}, p)
+	roles, isOK := params.Args["roles"].([]interface{})
+	if isOK {
+		var tmp []int
+		for i := range roles {
+			log.Println("roles[i]", roles[i])
+			tmp = append(tmp, roles[i].(int))
+		}
+		p["roles"] = tmp
+	}
+
+	// update project
+	err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C("project").Update(bson.M{"_id": id}, p)
 	if err != nil {
 		raven.CaptureError(err, nil)
-		log.Println("Update Company: ", err)
+		log.Println("Update Project: ", err)
 		return res, err
 	}
 
@@ -715,6 +759,4 @@ func UpdateProject(params graphql.ResolveParams) (interface{}, error) {
 	bsonBytes, _ := bson.Marshal(p)
 	bson.Unmarshal(bsonBytes, &res)
 	return res, nil
-
-	return nil, nil
 }
