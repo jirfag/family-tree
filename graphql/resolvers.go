@@ -295,7 +295,6 @@ func AddCompany(params graphql.ResolveParams) (interface{}, error) {
 
 // AddGroup is a graphql resolver to add group group
 func AddGroup(params graphql.ResolveParams) (interface{}, error) {
-
 	var res t.Group
 
 	// Generate ID

@@ -5,6 +5,7 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"hash"
 	"io"
 	"log"
@@ -63,10 +64,11 @@ type CallBackBody struct {
 	TableID  int    `json:"tableID"`
 	Field    string `json:"field"`  // example: avatar, logo, images
 	Action   string `json:"action"` // including: init, append{
+	FileName string `json:"fileName"`
 }
 
 // GetPolicyToken is a func to get PolicyToken
-func GetPolicyToken(username, table, field, action string, tableID int) PolicyToken {
+func GetPolicyToken(username, table, field, action string, tableID int, fileName string) PolicyToken {
 	now := time.Now().Unix()
 	expireEnd := now + expireTime
 	var tokenExpire = getGmtIso8601(expireEnd)
@@ -88,7 +90,11 @@ func GetPolicyToken(username, table, field, action string, tableID int) PolicyTo
 		Table:    table,
 		Action:   action,
 		Field:    field,
-		TableID:  tableID})
+		TableID:  tableID,
+		FileName: fileName,
+	})
+
+	fmt.Println(string(callbackData))
 
 	callbackParam.CallbackBody = string(callbackData)
 	//"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}"

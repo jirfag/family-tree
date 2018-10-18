@@ -39,16 +39,20 @@ func GetPolicyTokenHandler(c *gin.Context) {
 		username = claims["id"].(string)
 	}
 
+	fileName := c.Query("file_name")
+
+	fmt.Println("filename", fileName)
 	table := c.Query("table")
 	field := c.Query("field")
 	action := c.Query("action")
 	tableID, err := strconv.Atoi(c.Query("table_id"))
+
 	if err != nil {
 		c.JSON(http.StatusConflict, utils.ErrResp{Message: fmt.Sprintln(err), Code: http.StatusConflict})
 		return
 	}
 
-	c.JSON(http.StatusOK, utils.GetPolicyToken(username, table, field, action, tableID))
+	c.JSON(http.StatusOK, utils.GetPolicyToken(username, table, field, action, tableID, fileName))
 }
 
 // FilesCallBackHandler is a func to handle call back request
@@ -72,6 +76,10 @@ func FilesCallBackHandler(c *gin.Context) {
 	var data utils.CallBackBody
 
 	buf, err := ioutil.ReadAll(c.Request.Body)
+	buf = []byte(strings.Replace(string(buf), "\"\"", "\"", -1))
+	fmt.Println(string(buf))
+	err = json.Unmarshal(buf, &data)
+
 	if err != nil {
 		c.JSON(http.StatusNotAcceptable, utils.ErrResp{Code: http.StatusNotAcceptable, Message: err.Error()})
 		log.Print("bodyErr ", err.Error())
@@ -79,11 +87,12 @@ func FilesCallBackHandler(c *gin.Context) {
 	}
 
 	action := data.Action
+
 	switch action {
 	case "init":
 		action = "$update"
 		break
-	case "append":
+	case "add":
 		action = "$push"
 		break
 	default:
@@ -91,12 +100,14 @@ func FilesCallBackHandler(c *gin.Context) {
 		return
 	}
 
+	fmt.Println(data)
+
 	if data.Field == "avatar" || data.Field == "logo" {
 		err = db.DBSession.DB(utils.AppConfig.Mongo.DB).C(data.Table).Update(
-			bson.M{"username": username},
+			bson.M{"_id": data.TableID},
 			bson.M{
-				"$update": bson.M{
-					data.Field: data.FilePath,
+				"$set": bson.M{
+					data.Field: data.FilePath + data.FileName,
 				},
 			})
 	} else {
@@ -110,7 +121,8 @@ func FilesCallBackHandler(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, utils.ErrResp{Code: http.StatusNotAcceptable, Message: err.Error()})
+		fmt.Println(err.Error())
+		c.JSON(http.StatusNotFound, utils.ErrResp{Code: http.StatusNotFound, Message: err.Error()})
 		return
 	}
 
@@ -119,5 +131,5 @@ func FilesCallBackHandler(c *gin.Context) {
 	rdr = strings.Replace(rdr, "\"\"", "\"", -1)
 
 	json.Unmarshal([]byte(rdr), &data)
-	c.JSON(http.StatusOK, data)
+	c.JSON(http.StatusOK, gin.H{"code": http.StatusOK, "data": data, "message": "OK"})
 }
