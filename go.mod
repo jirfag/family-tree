@@ -19,7 +19,7 @@ require (
 	github.com/go-openapi/jsonreference v0.0.0-20180825180305-1c6a3fa339f2 // indirect
 	github.com/go-openapi/spec v0.0.0-20180801175345-384415f06ee2 // indirect
 	github.com/go-openapi/swag v0.0.0-20180825180336-0dc164b7900e // indirect
-	github.com/go-redis/redis v6.14.1+incompatible
+	github.com/go-redis/redis v6.14.2
 	github.com/graphql-go/graphql v0.7.7-0.20180912000844-cc8e9a91d6b8
 	github.com/graphql-go/handler v0.2.2-0.20180922162246-83cde2468fa5
 	github.com/jinzhu/configor v0.0.0-20180614024415-4edaf76fe188
