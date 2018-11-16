@@ -9,7 +9,7 @@ require (
 	github.com/Salvatore-Giordano/gin-redis-ip-limiter v0.0.0-20180421093006-409a923d7aa8
 	github.com/appleboy/gin-jwt v0.0.0-20180917072534-a4d85f559a8d
 	github.com/appleboy/gofight v2.0.0+incompatible
-	github.com/buger/jsonparser v0.0.0-20180808090653-f4dd9f5a6b44 // indirect
+	github.com/buger/jsonparser v0.0.0-20181116000421-bf1c66bbce23 // indirect
 	github.com/certifi/gocertifi v0.0.0-20180118203423-deb3ae2ef261 // indirect
 	github.com/ekyoung/gin-nice-recovery v0.0.0-20160510022553-1654dca486db
 	github.com/getsentry/raven-go v0.1.0
