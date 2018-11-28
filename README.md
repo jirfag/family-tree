@@ -4,6 +4,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/fredliang44/family-tree.svg?style=flat-square)](https://codecov.io/gh/fredliang44/family-tree)
 [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/fredliang44/family-tree)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fredliang44/family-tree?style=flat-square)](https://goreportcard.com/report/github.com/fredliang44/family-tree)
+
 ## 1. Docs
 
 Request|Document
@@ -21,12 +22,21 @@ GraphQL | <https://fmt.fredliang.cn/graphql>
 
 ## 3. Develope & Deploy
 
+** before develope**
+
+1. run  `go mod download` to download requirements
+2. run `go get -u github.com/swaggo/swag/cmd/swag` to install swagger for api docs
+3. run `swag init` to generate swagger docs
+
+** quick start **
+
 1. Please make sure your `go version` >= 1.11
 2. Edit `config.example.yml` and save it as `config.yml` for develope usage.
 3. Then edit `config.example.yml` and save it as `config.deploy.yml` for deploy usage.
 4. When deploying, mv `config.deploy.yml` to the same folder with your binary file you've built.
 
 ## 4. Project Structure
+
 ```shell
 ├── Dockerfile           // docker support
 ├── Gopkg.lock

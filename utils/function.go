@@ -1,6 +1,8 @@
 package utils
 
-import "reflect"
+import (
+	"reflect"
+)
 
 // Contains is a func to check whether item in a array
 func Contains(s interface{}, elem interface{}) bool {
