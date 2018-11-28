@@ -22,13 +22,13 @@ GraphQL | <https://fmt.fredliang.cn/graphql>
 
 ## 3. Develope & Deploy
 
-** before develope**
+## 3.1 Before develope
 
 1. run  `go mod download` to download requirements
 2. run `go get -u github.com/swaggo/swag/cmd/swag` to install swagger for api docs
 3. run `swag init` to generate swagger docs
 
-** quick start **
+## 3.2 Quick start
 
 1. Please make sure your `go version` >= 1.11
 2. Edit `config.example.yml` and save it as `config.yml` for develope usage.
