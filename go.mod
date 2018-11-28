@@ -12,7 +12,7 @@ require (
 	github.com/buger/jsonparser v0.0.0-20180808090653-f4dd9f5a6b44 // indirect
 	github.com/certifi/gocertifi v0.0.0-20180118203423-deb3ae2ef261 // indirect
 	github.com/ekyoung/gin-nice-recovery v0.0.0-20160510022553-1654dca486db
-	github.com/getsentry/raven-go v0.0.0-20180827214142-a9457d81ec91
+	github.com/getsentry/raven-go v0.1.0
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-errors/errors v1.0.1
 	github.com/go-openapi/jsonpointer v0.0.0-20180322222829-3a0015ad55fa // indirect
@@ -25,8 +25,8 @@ require (
 	github.com/jinzhu/configor v0.0.0-20180614024415-4edaf76fe188
 	github.com/json-iterator/go v1.1.5 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/labstack/echo v3.2.1+incompatible // indirect
-	github.com/labstack/gommon v0.2.7 // indirect
+	github.com/labstack/echo v3.3.7 // indirect
+	github.com/labstack/gommon v0.2.8 // indirect
 	github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329 // indirect
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
